@@ -115,22 +115,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
 
   const isAuthenticating = authProviderLoading !== null;
 
-  // Shared Liquid Glass interactive surface factory with subtle provider tinting
+  // Shared Liquid Glass interactive surface factory with subtle optical refraction tinting
   const getOAuthPillStyle = (tintRgbaDark: string, tintRgbaLight: string): React.CSSProperties => ({
     background:
       mode === 'dark'
-        ? `linear-gradient(110deg, rgba(22, 20, 34, 0.84) 0%, ${tintRgbaDark} 100%)`
-        : `linear-gradient(110deg, rgba(255, 255, 255, 0.92) 0%, ${tintRgbaLight} 100%)`,
-    backdropFilter: 'blur(24px) saturate(190%)',
-    WebkitBackdropFilter: 'blur(24px) saturate(190%)',
-    boxShadow:
-      mode === 'dark'
-        ? 'inset 0 1px 1.5px rgba(255, 255, 255, 0.32), inset 0 -1px 2px rgba(255, 255, 255, 0.08), 0 10px 24px -4px rgba(0, 0, 0, 0.45)'
-        : 'inset 0 1.5px 2px rgba(255, 255, 255, 0.96), 0 8px 20px -4px rgba(15, 23, 42, 0.09)',
-    border:
-      mode === 'dark'
-        ? '1px solid rgba(255, 255, 255, 0.2)'
-        : '1px solid rgba(15, 23, 42, 0.11)',
+        ? `radial-gradient(90% 120% at 85% 100%, ${tintRgbaDark} 0%, transparent 70%), linear-gradient(135deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.025) 52%, rgba(255, 255, 255, 0.06) 100%)`
+        : `radial-gradient(90% 120% at 85% 100%, ${tintRgbaLight} 0%, transparent 70%), linear-gradient(135deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.18) 52%, rgba(255, 255, 255, 0.3) 100%)`,
+    backdropFilter: 'blur(32px) saturate(210%)',
+    WebkitBackdropFilter: 'blur(32px) saturate(210%)',
   });
 
   return (
@@ -372,14 +364,19 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
           {/* Brand Header */}
           <div className="text-center space-y-1 mb-5 relative z-10">
             <div
-              className="w-11 h-11 rounded-2xl mx-auto mb-2.5 flex items-center justify-center text-white shadow-lg"
-              style={{
-                background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',
-                boxShadow:
-                  'inset 0 1.5px 1px rgba(255,255,255,0.45), 0 10px 24px -4px var(--accent-glow)',
-              }}
+              data-active="true"
+              className="liquid-dock-icon w-11 h-11 mx-auto mb-2.5 flex items-center justify-center"
+              style={
+                {
+                  '--dock-tint': 'rgba(56, 189, 248, 0.32)',
+                  '--dock-glow': 'rgba(56, 189, 248, 0.42)',
+                } as React.CSSProperties
+              }
             >
-              <FaIcon icon="fa-solid fa-layer-group" className="text-base" />
+              <FaIcon
+                icon="fa-solid fa-layer-group"
+                className="text-base text-[var(--accent-primary)] relative z-10"
+              />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-primary)]">
               {t.login.welcomeBack}
@@ -398,8 +395,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'apple')}
-                style={getOAuthPillStyle('rgba(136, 19, 55, 0.58)', 'rgba(241, 245, 249, 0.9)')}
-                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.018] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(244, 63, 94, 0.16)', 'rgba(244, 63, 94, 0.12)')}
+                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-apple" className="text-base shrink-0" />
                 <span className="truncate">
@@ -412,8 +409,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'google')}
-                style={getOAuthPillStyle('rgba(30, 58, 138, 0.54)', 'rgba(239, 246, 255, 0.9)')}
-                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.018] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(56, 189, 248, 0.16)', 'rgba(56, 189, 248, 0.14)')}
+                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -447,8 +444,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'facebook')}
                 title={t.login.signInWithFacebook}
-                style={getOAuthPillStyle('rgba(24, 119, 242, 0.45)', 'rgba(235, 245, 255, 0.92)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(59, 130, 246, 0.16)', 'rgba(59, 130, 246, 0.14)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-facebook" className="text-[#1877F2] text-sm shrink-0" />
                 <span className="truncate">
@@ -462,8 +459,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'x')}
                 title={t.login.signInWithX}
-                style={getOAuthPillStyle('rgba(39, 39, 42, 0.72)', 'rgba(244, 244, 245, 0.92)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(168, 85, 247, 0.15)', 'rgba(168, 85, 247, 0.12)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-x-twitter" className="text-sm shrink-0" />
                 <span className="truncate">
@@ -477,8 +474,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'github')}
                 title={t.login.signInWithGithub}
-                style={getOAuthPillStyle('rgba(63, 63, 70, 0.62)', 'rgba(241, 245, 249, 0.92)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(99, 102, 241, 0.16)', 'rgba(99, 102, 241, 0.13)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-github" className="text-sm shrink-0" />
                 <span className="truncate">

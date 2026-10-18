@@ -95,13 +95,19 @@ export const TopBar: React.FC<TopBarProps> = ({
             className="flex items-center gap-2.5 text-left group focus:outline-none shrink-0 cursor-pointer"
           >
             <div
-              className="w-8 h-8 rounded-xl flex items-center justify-center text-white shadow-sm transition-transform duration-150 group-hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',
-                boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.4)',
-              }}
+              data-active="true"
+              className="liquid-dock-icon w-8.5 h-8.5 flex items-center justify-center transition-transform duration-150 group-hover:scale-105"
+              style={
+                {
+                  '--dock-tint': 'rgba(56, 189, 248, 0.3)',
+                  '--dock-glow': 'rgba(56, 189, 248, 0.38)',
+                } as React.CSSProperties
+              }
             >
-              <FaIcon icon="fa-solid fa-layer-group" className="text-xs" />
+              <FaIcon
+                icon="fa-solid fa-layer-group"
+                className="text-xs text-[var(--accent-primary)] relative z-10"
+              />
             </div>
             <span className="text-base font-bold tracking-tight text-[var(--text-primary)] whitespace-nowrap">
               {t.app.brand}

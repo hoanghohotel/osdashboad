@@ -591,126 +591,129 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
     );
   }
 
-  // 1. Core Application Module 3D Squircle Icons
+  // 1. Core Application Module iOS 26 Clear/Tinted Liquid Glass Squircle Icons
   const appDockItems: {
     id: NavSectionId;
     label: string;
     faIcon: string;
-    glassTint: string;
-    glowColor: string;
+    accentSubIcon?: string;
+    dockTint: string;
+    dockGlow: string;
+    glyphColor: string;
     badge?: number;
   }[] = [
     {
       id: 'overview',
       label: t.nav.overview,
-      faIcon: 'fa-solid fa-gauge-high',
-      glassTint:
-        'linear-gradient(145deg, rgba(56, 189, 248, 0.88) 0%, rgba(0, 122, 255, 0.82) 55%, rgba(29, 78, 216, 0.9) 100%)',
-      glowColor: 'rgba(0, 122, 255, 0.48)',
+      faIcon: 'fa-solid fa-compass',
+      dockTint: 'rgba(56, 189, 248, 0.28)',
+      dockGlow: 'rgba(56, 189, 248, 0.38)',
+      glyphColor: '#38bdf8',
     },
     {
       id: 'analytics',
       label: t.nav.analytics,
-      faIcon: 'fa-solid fa-chart-line',
-      glassTint:
-        'linear-gradient(145deg, rgba(217, 70, 239, 0.88) 0%, rgba(147, 51, 234, 0.82) 55%, rgba(109, 40, 217, 0.9) 100%)',
-      glowColor: 'rgba(168, 85, 247, 0.48)',
+      faIcon: 'fa-solid fa-chart-pie',
+      dockTint: 'rgba(192, 132, 252, 0.28)',
+      dockGlow: 'rgba(192, 132, 252, 0.38)',
+      glyphColor: '#c084fc',
     },
     {
       id: 'orders',
       label: t.nav.orders,
       faIcon: 'fa-solid fa-bag-shopping',
-      glassTint:
-        'linear-gradient(145deg, rgba(52, 211, 153, 0.9) 0%, rgba(16, 185, 129, 0.82) 55%, rgba(4, 120, 87, 0.9) 100%)',
-      glowColor: 'rgba(16, 185, 129, 0.48)',
+      dockTint: 'rgba(52, 211, 153, 0.28)',
+      dockGlow: 'rgba(52, 211, 153, 0.38)',
+      glyphColor: '#34d399',
       badge: ordersCount,
     },
     {
       id: 'products',
       label: t.nav.products,
-      faIcon: 'fa-solid fa-cube',
-      glassTint:
-        'linear-gradient(145deg, rgba(251, 191, 36, 0.9) 0%, rgba(245, 158, 11, 0.84) 55%, rgba(217, 119, 6, 0.92) 100%)',
-      glowColor: 'rgba(245, 158, 11, 0.48)',
+      faIcon: 'fa-solid fa-cubes-stacked',
+      dockTint: 'rgba(251, 191, 36, 0.28)',
+      dockGlow: 'rgba(251, 191, 36, 0.38)',
+      glyphColor: '#fbbf24',
     },
     {
       id: 'customers',
       label: t.nav.customers,
-      faIcon: 'fa-solid fa-user-group',
-      glassTint:
-        'linear-gradient(145deg, rgba(251, 113, 133, 0.9) 0%, rgba(244, 63, 94, 0.84) 55%, rgba(190, 18, 60, 0.92) 100%)',
-      glowColor: 'rgba(244, 63, 94, 0.48)',
+      faIcon: 'fa-solid fa-user-astronaut',
+      dockTint: 'rgba(251, 113, 133, 0.28)',
+      dockGlow: 'rgba(251, 113, 133, 0.38)',
+      glyphColor: '#fb7185',
     },
     {
       id: 'development',
       label: 'shadcn UI Kit',
-      faIcon: 'fa-solid fa-code',
-      glassTint:
-        'linear-gradient(145deg, rgba(129, 140, 248, 0.9) 0%, rgba(99, 102, 241, 0.84) 55%, rgba(67, 56, 202, 0.92) 100%)',
-      glowColor: 'rgba(99, 102, 241, 0.48)',
+      faIcon: 'fa-solid fa-wand-magic-sparkles',
+      dockTint: 'rgba(129, 140, 248, 0.3)',
+      dockGlow: 'rgba(129, 140, 248, 0.4)',
+      glyphColor: '#818cf8',
     },
     {
       id: 'settings',
       label: t.nav.settings,
       faIcon: 'fa-solid fa-sliders',
-      glassTint:
-        'linear-gradient(145deg, rgba(148, 163, 184, 0.88) 0%, rgba(100, 116, 139, 0.82) 55%, rgba(51, 65, 85, 0.92) 100%)',
-      glowColor: 'rgba(100, 116, 139, 0.45)',
+      dockTint: 'rgba(148, 163, 184, 0.26)',
+      dockGlow: 'rgba(148, 163, 184, 0.34)',
+      glyphColor: '#94a3b8',
     },
   ];
 
-  // 2. Hardware Device Resolution Switcher 3D Squircle Icons
+  // 2. Hardware Device Resolution Switcher iOS 26 Clear/Tinted Liquid Glass Icons
   const deviceDockItems: {
     id: DeviceMode;
     label: string;
     resolution: string;
     faIcon: string;
-    glassTint: string;
-    glowColor: string;
+    dockTint: string;
+    dockGlow: string;
+    glyphColor: string;
   }[] = [
     {
       id: 'full',
       label: 'Full Desktop',
       resolution: 'Responsive Canvas',
-      faIcon: 'fa-solid fa-expand',
-      glassTint:
-        'linear-gradient(145deg, rgba(56, 189, 248, 0.85) 0%, rgba(14, 165, 233, 0.78) 100%)',
-      glowColor: 'rgba(14, 165, 233, 0.45)',
+      faIcon: 'fa-solid fa-display',
+      dockTint: 'rgba(56, 189, 248, 0.26)',
+      dockGlow: 'rgba(56, 189, 248, 0.36)',
+      glyphColor: '#38bdf8',
     },
     {
       id: 'macbook',
       label: 'MacBook Pro 16"',
       resolution: '1440 × 900 px',
       faIcon: 'fa-solid fa-laptop',
-      glassTint:
-        'linear-gradient(145deg, rgba(99, 102, 241, 0.88) 0%, rgba(59, 130, 246, 0.82) 100%)',
-      glowColor: 'rgba(59, 130, 246, 0.48)',
+      dockTint: 'rgba(96, 165, 250, 0.28)',
+      dockGlow: 'rgba(96, 165, 250, 0.38)',
+      glyphColor: '#60a5fa',
     },
     {
       id: 'ipad',
       label: 'iPad Pro 13"',
       resolution: '1180 × 820 px',
       faIcon: 'fa-solid fa-tablet-screen-button',
-      glassTint:
-        'linear-gradient(145deg, rgba(192, 132, 252, 0.88) 0%, rgba(147, 51, 234, 0.82) 100%)',
-      glowColor: 'rgba(168, 85, 247, 0.48)',
+      dockTint: 'rgba(167, 139, 250, 0.28)',
+      dockGlow: 'rgba(167, 139, 250, 0.38)',
+      glyphColor: '#a78bfa',
     },
     {
       id: 'iphone',
       label: 'iPhone 16 Pro Max',
       resolution: '430 × 932 px',
       faIcon: 'fa-solid fa-mobile-screen-button',
-      glassTint:
-        'linear-gradient(145deg, rgba(251, 113, 133, 0.88) 0%, rgba(225, 29, 72, 0.82) 100%)',
-      glowColor: 'rgba(225, 29, 72, 0.48)',
+      dockTint: 'rgba(244, 114, 182, 0.28)',
+      dockGlow: 'rgba(244, 114, 182, 0.38)',
+      glyphColor: '#f472b6',
     },
   ];
 
   const getScaleClass = (idx: number) => {
     if (hoveredIndex === null) return 'scale-100 translate-y-0';
     const dist = Math.abs(hoveredIndex - idx);
-    if (dist === 0) return 'scale-[1.24] -translate-y-3';
-    if (dist === 1) return 'scale-[1.11] -translate-y-1.5';
+    if (dist === 0) return 'scale-[1.22] -translate-y-2.5';
+    if (dist === 1) return 'scale-[1.09] -translate-y-1';
     return 'scale-100 translate-y-0';
   };
 
@@ -720,25 +723,25 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
       className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 max-w-[96vw] select-none"
     >
       <div
-        className="px-4 py-2.5 rounded-[34px] flex items-end gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar"
+        className="px-3.5 py-2 rounded-[26px] flex items-end gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar"
         style={{
           background:
             mode === 'dark'
-              ? 'linear-gradient(180deg, rgba(34, 40, 58, 0.72) 0%, rgba(14, 18, 28, 0.88) 100%)'
-              : 'linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(238, 244, 255, 0.92) 100%)',
-          backdropFilter: 'blur(36px) saturate(210%)',
-          WebkitBackdropFilter: 'blur(36px) saturate(210%)',
+              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.38) 100%)'
+              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.28) 100%)',
+          backdropFilter: 'blur(40px) saturate(210%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(210%)',
           boxShadow:
             mode === 'dark'
-              ? 'inset 0 1.5px 2px rgba(255,255,255,0.34), inset 0 -1.5px 3px rgba(244, 63, 94, 0.2), 0 26px 54px rgba(0,0,0,0.72)'
-              : 'inset 0 2px 2.5px rgba(255,255,255,0.98), inset 0 -1.5px 3px rgba(99,102,241,0.14), 0 22px 48px rgba(15,23,42,0.18)',
+              ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 24px 48px -12px rgba(0, 0, 0, 0.72)'
+              : 'inset 0 1px 0 0 rgba(255, 255, 255, 0.85), 0 20px 44px -12px rgba(15, 23, 42, 0.16)',
           border:
             mode === 'dark'
-              ? '1px solid rgba(255,255,255,0.22)'
-              : '1px solid rgba(255,255,255,0.92)',
+              ? '1px solid rgba(255, 255, 255, 0.14)'
+              : '1px solid rgba(255, 255, 255, 0.68)',
         }}
       >
-        {/* 1. Core Application Module 3D Liquid Glass Squircle Icons */}
+        {/* 1. Core Application Module iOS 26 Liquid Glass Squircle Icons */}
         {appDockItems.map((item, idx) => {
           const isActive = isAuthenticated && activeSection === item.id;
           const key = `app-${item.id}`;
@@ -747,13 +750,14 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
           return (
             <div key={item.id} className="relative flex flex-col items-center">
               {isHovered && (
-                <div className="hidden sm:block absolute -top-12 px-3 py-1 rounded-full glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
+                <div className="hidden sm:block absolute -top-11 px-3 py-1 rounded-full glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
                   {item.label}
                 </div>
               )}
 
               <button
                 type="button"
+                data-active={isActive}
                 onClick={() => {
                   triggerBounce(key);
                   onSelectSection(item.id);
@@ -767,28 +771,39 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
                   setHoveredKey(null);
                 }}
                 aria-label={item.label}
-                style={{
-                  background: item.glassTint,
-                  boxShadow: `inset 0 2px 2.5px rgba(255,255,255,0.82), inset 0 -2.5px 4px rgba(0,0,0,0.28), inset 0 0 0 1px rgba(255,255,255,0.28), 0 10px 22px -4px ${item.glowColor}`,
-                }}
-                className={`liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 text-white flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
+                style={
+                  {
+                    '--dock-tint': item.dockTint,
+                    '--dock-glow': item.dockGlow,
+                  } as React.CSSProperties
+                }
+                className={`liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
                   idx
                 )} ${isBouncing ? 'animate-bounce' : ''}`}
               >
-                <div className="liquid-dock-emblem">
-                  <FaIcon icon={item.faIcon} className="text-sm sm:text-base text-white" />
-                </div>
+                {/* Inner Optical Specular Plate + Luminous Glyph */}
+                <span
+                  aria-hidden="true"
+                  className="w-6 h-6 rounded-lg flex items-center justify-center relative z-10"
+                  style={{
+                    color: item.glyphColor,
+                    filter: `drop-shadow(0 2px 6px ${item.dockGlow})`,
+                  }}
+                >
+                  <FaIcon icon={item.faIcon} className="text-[17px] sm:text-[18px]" />
+                </span>
+
                 {typeof item.badge === 'number' && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 z-20 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 z-20 min-w-[17px] h-[17px] px-1 rounded-full bg-rose-500/90 backdrop-blur-md text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white/60 shadow-xs">
                     {item.badge}
                   </span>
                 )}
               </button>
 
               <span
-                className={`mt-1.5 w-1.5 h-1.5 rounded-full transition-all ${
+                className={`mt-1.5 w-1 h-1 rounded-full transition-all ${
                   isActive
-                    ? 'bg-[var(--text-primary)] scale-100 opacity-100 shadow-xs'
+                    ? 'bg-[var(--text-primary)] scale-100 opacity-90'
                     : 'scale-0 opacity-0'
                 }`}
               />
@@ -797,9 +812,9 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
         })}
 
         {/* Hairline Glass Dock Divider */}
-        <div className="h-9 w-px bg-[var(--glass-border-strong)] mx-1 mb-2 shrink-0" />
+        <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-1 mb-2.5 shrink-0" />
 
-        {/* 2. Device Mockup Resolution Switcher 3D Squircle Icons */}
+        {/* 2. Device Mockup Resolution Switcher iOS 26 Liquid Glass Squircle Icons */}
         {deviceDockItems.map((dev, devIdx) => {
           const globalIdx = appDockItems.length + devIdx;
           const isActive = deviceMode === dev.id;
@@ -809,7 +824,7 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
           return (
             <div key={dev.id} className="relative flex flex-col items-center">
               {isHovered && (
-                <div className="hidden sm:flex flex-col items-center absolute -top-14 px-3 py-1 rounded-2xl glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
+                <div className="hidden sm:flex flex-col items-center absolute -top-13 px-3 py-1 rounded-2xl glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
                   <span>{dev.label}</span>
                   <span className="text-[9px] font-mono-tabular text-[var(--accent-primary)]">
                     {dev.resolution}
@@ -819,6 +834,7 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
 
               <button
                 type="button"
+                data-active={isActive}
                 onClick={() => {
                   triggerBounce(key);
                   onSelectDeviceMode(dev.id);
@@ -840,36 +856,32 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
                 }}
                 aria-label={`${dev.label} (${dev.resolution})`}
                 style={
-                  isActive
-                    ? {
-                        background: dev.glassTint,
-                        boxShadow: `inset 0 2px 2.5px rgba(255,255,255,0.88), inset 0 -2.5px 4px rgba(0,0,0,0.28), 0 12px 24px -4px ${dev.glowColor}`,
-                      }
-                    : undefined
+                  {
+                    '--dock-tint': dev.dockTint,
+                    '--dock-glow': dev.dockGlow,
+                  } as React.CSSProperties
                 }
                 className={`liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
                   globalIdx
-                )} ${isBouncing ? 'animate-bounce' : ''} ${
-                  isActive
-                    ? 'text-white ring-2 ring-white/70'
-                    : 'liquid-btn-caustic text-[var(--text-primary)]'
-                }`}
+                )} ${isBouncing ? 'animate-bounce' : ''}`}
               >
-                <div className="liquid-dock-emblem">
-                  <FaIcon
-                    icon={dev.faIcon}
-                    className={`text-sm sm:text-base ${
-                      isActive ? 'text-white' : 'text-[var(--text-primary)]'
-                    }`}
-                  />
-                </div>
+                <span
+                  aria-hidden="true"
+                  className="w-6 h-6 rounded-lg flex items-center justify-center relative z-10"
+                  style={{
+                    color: isActive ? dev.glyphColor : 'var(--text-primary)',
+                    filter: isActive ? `drop-shadow(0 2px 6px ${dev.dockGlow})` : 'none',
+                  }}
+                >
+                  <FaIcon icon={dev.faIcon} className="text-[16px] sm:text-[17px]" />
+                </span>
               </button>
 
               <span
-                className={`mt-1.5 h-1.5 rounded-full transition-all ${
+                className={`mt-1.5 h-1 rounded-full transition-all ${
                   isActive
-                    ? 'w-3 bg-[var(--accent-primary)] opacity-100'
-                    : 'w-1.5 opacity-0'
+                    ? 'w-2.5 bg-[var(--accent-primary)] opacity-100'
+                    : 'w-1 opacity-0'
                 }`}
               />
             </div>
@@ -877,9 +889,9 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
         })}
 
         {/* Hairline Glass Dock Divider */}
-        <div className="h-9 w-px bg-[var(--glass-border-strong)] mx-1 mb-2 shrink-0 hidden sm:block" />
+        <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-1 mb-2.5 shrink-0 hidden sm:block" />
 
-        {/* 3. System Utility 3D Glass Squircle Icons */}
+        {/* 3. System Utility iOS 26 Clear Liquid Glass Squircle Icons */}
         <div className="hidden sm:flex items-end gap-2">
           {isAuthenticated && (
             <>
@@ -888,13 +900,20 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
                   type="button"
                   onClick={onOpenCommandPalette}
                   title="Spotlight Search (⌘K)"
-                  className="liquid-dock-icon liquid-btn-caustic w-11 h-11 sm:w-12 sm:h-12 text-[var(--text-primary)] flex items-center justify-center transition-all duration-200 hover:-translate-y-2.5 hover:scale-115 active:scale-95 cursor-pointer"
+                  style={
+                    {
+                      '--dock-tint': 'rgba(56, 189, 248, 0.22)',
+                      '--dock-glow': 'rgba(56, 189, 248, 0.32)',
+                    } as React.CSSProperties
+                  }
+                  className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
                 >
-                  <div className="liquid-dock-emblem">
-                    <FaIcon icon="fa-solid fa-magnifying-glass" className="text-sm text-[var(--accent-primary)]" />
-                  </div>
+                  <FaIcon
+                    icon="fa-solid fa-magnifying-glass"
+                    className="text-[15px] text-sky-400 relative z-10"
+                  />
                 </button>
-                <span className="mt-1.5 w-1.5 h-1.5 opacity-0" />
+                <span className="mt-1.5 w-1 h-1 opacity-0" />
               </div>
 
               <div className="relative flex flex-col items-center">
@@ -902,13 +921,20 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
                   type="button"
                   onClick={onOpenQuickCreate}
                   title={t.app.quickCreate}
-                  className="liquid-dock-icon liquid-btn-caustic w-11 h-11 sm:w-12 sm:h-12 text-[var(--accent-primary)] flex items-center justify-center transition-all duration-200 hover:-translate-y-2.5 hover:scale-115 active:scale-95 cursor-pointer"
+                  style={
+                    {
+                      '--dock-tint': 'rgba(52, 211, 153, 0.22)',
+                      '--dock-glow': 'rgba(52, 211, 153, 0.32)',
+                    } as React.CSSProperties
+                  }
+                  className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
                 >
-                  <div className="liquid-dock-emblem">
-                    <FaIcon icon="fa-solid fa-plus" className="text-sm text-emerald-500" />
-                  </div>
+                  <FaIcon
+                    icon="fa-solid fa-plus"
+                    className="text-[15px] text-emerald-400 relative z-10"
+                  />
                 </button>
-                <span className="mt-1.5 w-1.5 h-1.5 opacity-0" />
+                <span className="mt-1.5 w-1 h-1 opacity-0" />
               </div>
             </>
           )}
@@ -919,16 +945,20 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
                 type="button"
                 onClick={onToggleLock}
                 title={isAuthenticated ? 'Lock Screen (Login View)' : 'Unlock to Dashboard'}
-                className="liquid-dock-icon liquid-btn-caustic w-11 h-11 sm:w-12 sm:h-12 text-[var(--text-primary)] flex items-center justify-center transition-all duration-200 hover:-translate-y-2.5 hover:scale-115 active:scale-95 cursor-pointer"
+                style={
+                  {
+                    '--dock-tint': 'rgba(251, 113, 133, 0.24)',
+                    '--dock-glow': 'rgba(251, 113, 133, 0.34)',
+                  } as React.CSSProperties
+                }
+                className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
               >
-                <div className="liquid-dock-emblem">
-                  <FaIcon
-                    icon={isAuthenticated ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open'}
-                    className="text-sm text-rose-500"
-                  />
-                </div>
+                <FaIcon
+                  icon={isAuthenticated ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open'}
+                  className="text-[15px] text-rose-400 relative z-10"
+                />
               </button>
-              <span className="mt-1.5 w-1.5 h-1.5 opacity-0" />
+              <span className="mt-1.5 w-1 h-1 opacity-0" />
             </div>
           )}
 
@@ -937,16 +967,20 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
               type="button"
               onClick={toggleMode}
               title={mode === 'dark' ? t.app.themeLight : t.app.themeDark}
-              className="liquid-dock-icon liquid-btn-caustic w-11 h-11 sm:w-12 sm:h-12 text-[var(--text-primary)] flex items-center justify-center transition-all duration-200 hover:-translate-y-2.5 hover:scale-115 active:scale-95 cursor-pointer"
+              style={
+                {
+                  '--dock-tint': 'rgba(251, 191, 36, 0.24)',
+                  '--dock-glow': 'rgba(251, 191, 36, 0.34)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
             >
-              <div className="liquid-dock-emblem">
-                <FaIcon
-                  icon={mode === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}
-                  className="text-sm text-amber-500"
-                />
-              </div>
+              <FaIcon
+                icon={mode === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}
+                className="text-[15px] text-amber-400 relative z-10"
+              />
             </button>
-            <span className="mt-1.5 w-1.5 h-1.5 opacity-0" />
+            <span className="mt-1.5 w-1 h-1 opacity-0" />
           </div>
 
           <div className="relative flex flex-col items-center">
@@ -954,11 +988,11 @@ export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
               type="button"
               onClick={() => setDockMinimized(true)}
               title="Minimize Dock"
-              className="liquid-dock-icon liquid-btn-caustic w-9 h-11 sm:h-12 text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center justify-center transition-all cursor-pointer"
+              className="liquid-dock-icon w-9 h-11 sm:h-12 text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center justify-center transition-all cursor-pointer"
             >
               <FaIcon icon="fa-solid fa-angles-down" className="text-xs relative z-10" />
             </button>
-            <span className="mt-1.5 w-1.5 h-1.5 opacity-0" />
+            <span className="mt-1.5 w-1 h-1 opacity-0" />
           </div>
         </div>
       </div>
