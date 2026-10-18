@@ -343,14 +343,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
               <span className="w-3 h-3 rounded-full bg-[#28c840] border border-black/10" />
             </div>
 
-            <div className="flex items-center gap-1 p-1 rounded-full bg-black/10 dark:bg-white/10 border border-white/15">
+            <div className="liquid-pill-group">
               <button
                 type="button"
                 onClick={() => setAuthTab('sso')}
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                className={`px-3.5 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
                   authTab === 'sso'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    ? 'liquid-btn-primary text-white'
+                    : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 OAuth / Passkey
@@ -358,10 +358,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
               <button
                 type="button"
                 onClick={() => setAuthTab('credentials')}
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
+                className={`px-3.5 py-1 rounded-full text-[11px] font-semibold transition-all cursor-pointer ${
                   authTab === 'credentials'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    ? 'liquid-btn-primary text-white'
+                    : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 Email
@@ -398,8 +398,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'apple')}
-                style={getOAuthPillStyle('rgba(136, 19, 55, 0.55)', 'rgba(241, 245, 249, 0.85)')}
-                className="w-full py-3 px-4 rounded-2xl flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(136, 19, 55, 0.58)', 'rgba(241, 245, 249, 0.9)')}
+                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.018] active:scale-[0.98] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-apple" className="text-base shrink-0" />
                 <span className="truncate">
@@ -412,8 +412,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'google')}
-                style={getOAuthPillStyle('rgba(30, 58, 138, 0.5)', 'rgba(239, 246, 255, 0.85)')}
-                className="w-full py-3 px-4 rounded-2xl flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(30, 58, 138, 0.54)', 'rgba(239, 246, 255, 0.9)')}
+                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.018] active:scale-[0.98] cursor-pointer whitespace-nowrap"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path
@@ -447,8 +447,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'facebook')}
                 title={t.login.signInWithFacebook}
-                style={getOAuthPillStyle('rgba(24, 119, 242, 0.42)', 'rgba(235, 245, 255, 0.88)')}
-                className="py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(24, 119, 242, 0.45)', 'rgba(235, 245, 255, 0.92)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-facebook" className="text-[#1877F2] text-sm shrink-0" />
                 <span className="truncate">
@@ -462,8 +462,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'x')}
                 title={t.login.signInWithX}
-                style={getOAuthPillStyle('rgba(39, 39, 42, 0.68)', 'rgba(244, 244, 245, 0.88)')}
-                className="py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(39, 39, 42, 0.72)', 'rgba(244, 244, 245, 0.92)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-x-twitter" className="text-sm shrink-0" />
                 <span className="truncate">
@@ -477,8 +477,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'github')}
                 title={t.login.signInWithGithub}
-                style={getOAuthPillStyle('rgba(63, 63, 70, 0.58)', 'rgba(241, 245, 249, 0.88)')}
-                className="py-2.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                style={getOAuthPillStyle('rgba(63, 63, 70, 0.62)', 'rgba(241, 245, 249, 0.92)')}
+                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] cursor-pointer whitespace-nowrap"
               >
                 <FaIcon icon="fa-brands fa-github" className="text-sm shrink-0" />
                 <span className="truncate">
@@ -495,7 +495,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'passkey')}
-                className="w-full py-2.5 px-5 rounded-full glass-interactive flex items-center justify-between text-xs font-medium text-[var(--text-primary)] cursor-pointer"
+                className="w-full py-2.5 px-5 rounded-full liquid-btn flex items-center justify-between text-xs font-semibold text-[var(--text-primary)] cursor-pointer"
               >
                 <span className="flex items-center gap-2.5">
                   <FaIcon icon="fa-solid fa-fingerprint" className="text-[var(--accent-primary)]" />
@@ -522,19 +522,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                           setSelectedOperator(op);
                           setEmail(op.email);
                         }}
-                        className={`p-2 rounded-2xl border text-center transition-all cursor-pointer ${
+                        className={`p-2 rounded-2xl text-center transition-all cursor-pointer ${
                           active
-                            ? 'bg-[var(--accent-soft)] border-[var(--accent-border)]'
-                            : 'glass-interactive border-transparent opacity-75 hover:opacity-100'
+                            ? 'liquid-btn-primary text-white'
+                            : 'liquid-btn opacity-85 hover:opacity-100'
                         }`}
                       >
                         <div className="flex justify-center mb-1">
                           <Avatar initials={op.initials} size="sm" />
                         </div>
-                        <p className="text-[11px] font-semibold text-[var(--text-primary)] truncate">
+                        <p
+                          className={`text-[11px] font-semibold truncate ${
+                            active ? 'text-white' : 'text-[var(--text-primary)]'
+                          }`}
+                        >
                           {op.name.split(' ')[0]}
                         </p>
-                        <p className="text-[9px] text-[var(--text-muted)] truncate">{op.role}</p>
+                        <p
+                          className={`text-[9px] truncate ${
+                            active ? 'text-white/80' : 'text-[var(--text-muted)]'
+                          }`}
+                        >
+                          {op.role}
+                        </p>
                       </button>
                     );
                   })}

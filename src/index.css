@@ -227,38 +227,355 @@
   box-shadow: var(--glass-highlight), var(--glass-shadow-lg);
 }
 
-.glass-interactive {
-  background: var(--glass-interactive-bg);
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight);
-  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+/* ==========================================================================
+ * UNIFIED 3D APPLE LIQUID GLASS BUTTON & INTERACTIVE LENS SYSTEM
+ * Inspired by macOS Tahoe / iOS 26 Refractive Glass Capsules
+ * ========================================================================== */
+.glass-interactive,
+.liquid-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.88) 0%,
+    rgba(241, 245, 255, 0.62) 52%,
+    rgba(255, 255, 255, 0.82) 100%
+  );
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.98),
+    inset 0 -1.5px 2.5px 0 rgba(99, 102, 241, 0.12),
+    inset 0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 8px 20px -4px rgba(15, 23, 42, 0.1),
+    0 2px 6px -1px rgba(15, 23, 42, 0.05);
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-interactive:hover {
-  background: var(--glass-interactive-hover);
-  border-color: var(--glass-border-strong);
+html.dark .glass-interactive,
+html.dark .liquid-btn {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(30, 36, 54, 0.52) 52%,
+    rgba(255, 255, 255, 0.11) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1.5px 3px 0 rgba(244, 63, 94, 0.16),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 10px 24px -5px rgba(0, 0, 0, 0.55),
+    0 3px 8px -2px rgba(0, 0, 0, 0.35);
 }
 
-.glass-interactive:active {
-  transform: scale(0.985);
+/* Top Convex Glass Lens Specular Crest */
+.glass-interactive::before,
+.liquid-btn::before,
+.accent-btn::before {
+  content: "";
+  position: absolute;
+  inset: 1px 2px 48% 2px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.12) 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 180ms ease;
 }
 
-/* Accent-tinted interactive control */
-.accent-btn {
-  background-color: var(--accent-primary);
+html.dark .glass-interactive::before,
+html.dark .liquid-btn::before,
+html.dark .accent-btn::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.05) 68%,
+    transparent 100%
+  );
+}
+
+.glass-interactive > *,
+.liquid-btn > *,
+.accent-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-interactive:hover,
+.liquid-btn:hover {
+  transform: translateY(-1px) scale(1.012);
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow:
+    inset 0 2px 2.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 3.5px 0 var(--accent-soft),
+    inset 0 0 0 1px rgba(15, 23, 42, 0.08),
+    0 12px 28px -5px rgba(15, 23, 42, 0.14),
+    0 4px 10px -2px rgba(15, 23, 42, 0.08);
+}
+
+html.dark .glass-interactive:hover,
+html.dark .liquid-btn:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(42, 50, 74, 0.62) 50%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 1.5px 2.5px 0 rgba(255, 255, 255, 0.58),
+    inset 0 -2px 4px 0 rgba(244, 63, 94, 0.26),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 14px 30px -5px rgba(0, 0, 0, 0.68),
+    0 4px 12px -2px var(--accent-glow);
+}
+
+.glass-interactive:active,
+.liquid-btn:active {
+  transform: translateY(0) scale(0.975);
+}
+
+/* Primary Refractive Accent Glass Button (.accent-btn & .liquid-btn-primary) */
+.accent-btn,
+.liquid-btn-primary {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent-primary) 78%, white 22%) 0%,
+    color-mix(in srgb, var(--accent-primary) 88%, transparent 12%) 50%,
+    color-mix(in srgb, var(--accent-hover) 92%, black 8%) 100%
+  );
+  backdrop-filter: blur(24px) saturate(210%);
+  -webkit-backdrop-filter: blur(24px) saturate(210%);
   color: #ffffff;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.32), 0 4px 14px -2px var(--accent-glow);
-  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 3.5px 0 rgba(0, 0, 0, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 10px 26px -4px var(--accent-glow),
+    0 3px 8px -2px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.accent-btn:hover {
-  background-color: var(--accent-hover);
+.accent-btn:hover,
+.liquid-btn-primary:hover {
+  transform: translateY(-1px) scale(1.018);
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.78),
+    inset 0 -2px 4px 0 rgba(255, 255, 255, 0.25),
+    0 14px 32px -4px var(--accent-glow),
+    0 4px 12px -2px rgba(0, 0, 0, 0.3);
 }
 
-.accent-btn:active {
-  transform: scale(0.985);
+.accent-btn:active,
+.liquid-btn-primary:active {
+  transform: translateY(0) scale(0.975);
+}
+
+/* Outline Refractive Glass Capsule */
+.liquid-btn-outline {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.48) 0%,
+    rgba(255, 255, 255, 0.16) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1.5px solid rgba(15, 23, 42, 0.18);
+  box-shadow:
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.85),
+    0 6px 16px -4px rgba(15, 23, 42, 0.08);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.dark .liquid-btn-outline {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 2px 0 rgba(255, 255, 255, 0.08),
+    0 8px 20px -4px rgba(0, 0, 0, 0.45);
+}
+
+.liquid-btn-outline:hover {
+  transform: translateY(-1px) scale(1.012);
+  border-color: var(--accent-border);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.55),
+    0 10px 24px -4px var(--accent-glow);
+}
+
+/* Ghost Glass Capsule */
+.liquid-btn-ghost {
+  position: relative;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-btn-ghost:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.38) 100%
+  );
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.8),
+    0 6px 14px -3px rgba(15, 23, 42, 0.08);
+}
+
+html.dark .liquid-btn-ghost:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.32),
+    0 6px 16px -3px rgba(0, 0, 0, 0.45);
+}
+
+/* Semantic Refractive Glass Buttons (Destructive, Success, Warning, Iridescent Caustic) */
+.liquid-btn-destructive {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.9) 0%, rgba(225, 29, 72, 0.86) 55%, rgba(159, 18, 57, 0.92) 100%);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 3px 0 rgba(0, 0, 0, 0.25),
+    0 10px 24px -4px rgba(225, 29, 72, 0.45);
+}
+
+.liquid-btn-success {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.9) 0%, rgba(16, 185, 129, 0.86) 55%, rgba(4, 120, 87, 0.92) 100%);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.65),
+    inset 0 -2px 3px 0 rgba(0, 0, 0, 0.22),
+    0 10px 24px -4px rgba(16, 185, 129, 0.42);
+}
+
+.liquid-btn-warning {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.92) 0%, rgba(245, 158, 11, 0.88) 55%, rgba(180, 83, 9, 0.92) 100%);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  color: #090b10;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.78),
+    inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18),
+    0 10px 24px -4px rgba(245, 158, 11, 0.42);
+}
+
+/* Signature Chromatic Caustic Glass Pill (Reference Image Style) */
+.liquid-btn-caustic {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(241, 245, 255, 0.74) 48%,
+    rgba(253, 242, 248, 0.88) 100%
+  );
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 0 2px 2.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -2px 4px 0 rgba(244, 63, 94, 0.22),
+    inset 2px 0 4px 0 rgba(56, 189, 248, 0.18),
+    0 12px 28px -5px rgba(15, 23, 42, 0.14);
+}
+
+html.dark .liquid-btn-caustic {
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(24, 20, 38, 0.68) 48%,
+    rgba(136, 19, 55, 0.36) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    inset 0 1.5px 2.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px 0 rgba(244, 63, 94, 0.35),
+    inset 2px 0 4px 0 rgba(56, 189, 248, 0.22),
+    0 14px 32px -5px rgba(0, 0, 0, 0.65);
+}
+
+/* Segmented Capsule Track (.liquid-pill-group) */
+.liquid-pill-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset 0 1px 2px rgba(15, 23, 42, 0.08),
+    0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+html.dark .liquid-pill-group {
+  background: rgba(8, 10, 18, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1.5px 3px rgba(0, 0, 0, 0.55),
+    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .accent-surface {
@@ -272,7 +589,8 @@
   .glass-primary,
   .glass-secondary,
   .glass-floating,
-  .glass-interactive {
+  .glass-interactive,
+  .liquid-btn {
     background-color: var(--bg-canvas-secondary);
   }
 }
@@ -308,7 +626,211 @@
   background: rgba(148, 163, 184, 0.5);
 }
 
-/* Device Mockup Viewport Responsive Overrides */
+/* ==========================================================================
+ * 3D APPLE LIQUID GLASS SQUIRCLE DOCK ICONS (.liquid-dock-icon)
+ * Multi-layered translucent glass squircle + inner floating glass emblem
+ * ========================================================================== */
+.liquid-dock-icon {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 16px;
+  backdrop-filter: blur(24px) saturate(210%);
+  -webkit-backdrop-filter: blur(24px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.52);
+  box-shadow:
+    inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -2.5px 4px 0 rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.24),
+    0 12px 24px -5px rgba(0, 0, 0, 0.45),
+    0 4px 10px -2px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top Convex Specular Lens Arc on Dock Squircle */
+.liquid-dock-icon::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px 2.5px 46% 2.5px;
+  border-radius: 13px 13px 999px 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.16) 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Bottom Caustic Light Bounce inside Dock Squircle */
+.liquid-dock-icon::after {
+  content: "";
+  position: absolute;
+  inset: 55% 4px 1.5px 4px;
+  border-radius: 999px 999px 13px 13px;
+  background: radial-gradient(
+    ellipse at 50% 100%,
+    rgba(255, 255, 255, 0.42) 0%,
+    transparent 75%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Inner Floating 3D Frosted Glass Emblem Plate */
+.liquid-dock-emblem {
+  position: relative;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.85),
+    0 3px 8px rgba(0, 0, 0, 0.24);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
+}
+
+/* ==========================================================================
+ * DETERMINISTIC DEVICE MOCKUP RESOLUTION LOCKING
+ * Ensures each device mockup (MacBook 1440×900, iPad 1180×820 / 820×1180,
+ * iPhone 430×932 / 932×430) ALWAYS renders its exact target layout,
+ * completely independent of the viewer's physical screen size.
+ * ========================================================================== */
+
+/* 1. MACBOOK PRO 16" (1440 × 900) - Force full desktop layout on any screen */
+.device-viewport-macbook aside.hidden.lg\:block {
+  display: block !important;
+}
+.device-viewport-macbook div.hidden.md\:block {
+  display: block !important;
+}
+.device-viewport-macbook .hidden.sm\:inline,
+.device-viewport-macbook .hidden.xl\:inline {
+  display: inline !important;
+}
+.device-viewport-macbook .hidden.xl\:flex,
+.device-viewport-macbook .hidden.lg\:inline-flex,
+.device-viewport-macbook .hidden.sm\:inline-flex {
+  display: inline-flex !important;
+}
+.device-viewport-macbook button.lg\:hidden,
+.device-viewport-macbook button.md\:hidden,
+.device-viewport-macbook div.md\:hidden {
+  display: none !important;
+}
+.device-viewport-macbook .xl\:grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+.device-viewport-macbook .xl\:grid-cols-3,
+.device-viewport-macbook .lg\:grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.device-viewport-macbook .lg\:grid-cols-2,
+.device-viewport-macbook .md\:grid-cols-2,
+.device-viewport-macbook .sm\:grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.device-viewport-macbook .lg\:flex-row,
+.device-viewport-macbook .sm\:flex-row {
+  flex-direction: row !important;
+  align-items: center !important;
+}
+.device-viewport-macbook .xl\:col-span-2 {
+  grid-column: span 2 / span 2 !important;
+}
+
+/* 2. IPAD PRO 13" LANDSCAPE (1180 × 820) - Force tablet-landscape layout */
+.device-viewport-ipad-landscape aside.hidden.lg\:block {
+  display: block !important;
+}
+.device-viewport-ipad-landscape div.hidden.md\:block {
+  display: block !important;
+}
+.device-viewport-ipad-landscape .hidden.sm\:inline {
+  display: inline !important;
+}
+.device-viewport-ipad-landscape .hidden.sm\:inline-flex,
+.device-viewport-ipad-landscape .hidden.lg\:inline-flex {
+  display: inline-flex !important;
+}
+.device-viewport-ipad-landscape button.lg\:hidden,
+.device-viewport-ipad-landscape button.md\:hidden,
+.device-viewport-ipad-landscape div.md\:hidden {
+  display: none !important;
+}
+.device-viewport-ipad-landscape .xl\:grid-cols-4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.device-viewport-ipad-landscape .lg\:grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.device-viewport-ipad-landscape .lg\:grid-cols-2,
+.device-viewport-ipad-landscape .md\:grid-cols-2,
+.device-viewport-ipad-landscape .sm\:grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.device-viewport-ipad-landscape .lg\:flex-row,
+.device-viewport-ipad-landscape .sm\:flex-row {
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+/* 3. IPAD PRO 13" PORTRAIT (820 × 1180) - Force tablet-portrait layout */
+.device-viewport-ipad-portrait aside.hidden.lg\:block,
+.device-viewport-ipad-portrait .hidden.xl\:inline,
+.device-viewport-ipad-portrait .hidden.xl\:flex,
+.device-viewport-ipad-portrait .hidden.lg\:inline-flex {
+  display: none !important;
+}
+.device-viewport-ipad-portrait button.lg\:hidden {
+  display: inline-flex !important;
+}
+.device-viewport-ipad-portrait div.hidden.md\:block {
+  display: block !important;
+}
+.device-viewport-ipad-portrait button.md\:hidden,
+.device-viewport-ipad-portrait div.md\:hidden {
+  display: none !important;
+}
+.device-viewport-ipad-portrait .hidden.sm\:inline {
+  display: inline !important;
+}
+.device-viewport-ipad-portrait .hidden.sm\:inline-flex {
+  display: inline-flex !important;
+}
+.device-viewport-ipad-portrait .xl\:grid-cols-4,
+.device-viewport-ipad-portrait .lg\:grid-cols-3,
+.device-viewport-ipad-portrait .lg\:grid-cols-2,
+.device-viewport-ipad-portrait .md\:grid-cols-2,
+.device-viewport-ipad-portrait .sm\:grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.device-viewport-ipad-portrait .lg\:flex-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+.device-viewport-ipad-portrait .sm\:flex-row {
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+/* 4. IPHONE 16 PRO MAX PORTRAIT (430 × 932) - Force mobile 1-column layout */
 .device-viewport-iphone .xl\:grid-cols-4,
 .device-viewport-iphone .xl\:grid-cols-3,
 .device-viewport-iphone .lg\:grid-cols-3,
@@ -317,42 +839,51 @@
 .device-viewport-iphone .sm\:grid-cols-2 {
   grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
 }
-
 .device-viewport-iphone .lg\:flex-row,
 .device-viewport-iphone .sm\:flex-row {
   flex-direction: column !important;
   align-items: stretch !important;
 }
-
 .device-viewport-iphone aside.hidden.lg\:block,
 .device-viewport-iphone div.hidden.md\:block,
 .device-viewport-iphone .hidden.sm\:inline,
 .device-viewport-iphone .hidden.xl\:inline,
 .device-viewport-iphone .hidden.xl\:flex,
+.device-viewport-iphone .hidden.lg\:inline-flex,
 .device-viewport-iphone .hidden.sm\:inline-flex {
   display: none !important;
 }
-
 .device-viewport-iphone button.lg\:hidden,
 .device-viewport-iphone button.md\:hidden {
   display: inline-flex !important;
 }
-
 .device-viewport-iphone div.md\:hidden {
   display: block !important;
 }
 
-.device-viewport-ipad-portrait .xl\:grid-cols-4,
-.device-viewport-ipad-portrait .lg\:grid-cols-3 {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
-
-.device-viewport-ipad-portrait aside.hidden.lg\:block {
+/* 5. IPHONE 16 PRO MAX LANDSCAPE (932 × 430) - Force mobile-landscape layout */
+.device-viewport-iphone-landscape aside.hidden.lg\:block,
+.device-viewport-iphone-landscape .hidden.xl\:inline,
+.device-viewport-iphone-landscape .hidden.xl\:flex,
+.device-viewport-iphone-landscape .hidden.lg\:inline-flex {
   display: none !important;
 }
-
-.device-viewport-ipad-portrait button.lg\:hidden {
+.device-viewport-iphone-landscape button.lg\:hidden {
   display: inline-flex !important;
+}
+.device-viewport-iphone-landscape div.hidden.md\:block {
+  display: block !important;
+}
+.device-viewport-iphone-landscape button.md\:hidden,
+.device-viewport-iphone-landscape div.md\:hidden {
+  display: none !important;
+}
+.device-viewport-iphone-landscape .xl\:grid-cols-4,
+.device-viewport-iphone-landscape .lg\:grid-cols-3,
+.device-viewport-iphone-landscape .lg\:grid-cols-2,
+.device-viewport-iphone-landscape .md\:grid-cols-2,
+.device-viewport-iphone-landscape .sm\:grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 
 

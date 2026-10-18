@@ -537,11 +537,11 @@ export const DevelopmentShowcaseView: React.FC = () => {
                   {/* Split Action Button */}
                   <div className="relative">
                     <Label>{'Split Action Button (<SplitButton />)'}</Label>
-                    <div className="inline-flex items-center rounded-xl overflow-hidden shadow-xs">
+                    <div className="inline-flex items-center rounded-full overflow-hidden shadow-xs">
                       <Button
                         variant="default"
                         size="sm"
-                        className="rounded-r-none border-r border-white/20"
+                        className="rounded-r-none border-r border-white/25"
                         leftFaIcon="fa-solid fa-rocket"
                         onClick={() => addToast('Production Release Dispatched', 'Main split action.')}
                       >
@@ -550,7 +550,7 @@ export const DevelopmentShowcaseView: React.FC = () => {
                       <Button
                         variant="default"
                         size="sm"
-                        className="rounded-l-none px-2"
+                        className="rounded-l-none px-2.5"
                         aria-label="More deploy targets"
                         onClick={() => setSplitMenuOpen((o) => !o)}
                       >
@@ -572,7 +572,7 @@ export const DevelopmentShowcaseView: React.FC = () => {
                               setSplitMenuOpen(false);
                               addToast(item.label);
                             }}
-                            className="w-full text-left px-3 py-1.5 rounded-xl text-xs text-[var(--text-primary)] hover:bg-[var(--accent-soft)] flex items-center gap-2 cursor-pointer"
+                            className="w-full text-left px-3 py-1.5 rounded-full text-xs text-[var(--text-primary)] hover:bg-[var(--accent-soft)] flex items-center gap-2 cursor-pointer"
                           >
                             <FaIcon icon={item.icon} className="text-[var(--accent-primary)]" />
                             <span>{item.label}</span>
@@ -589,7 +589,7 @@ export const DevelopmentShowcaseView: React.FC = () => {
                 <div>
                   <Label>{'Toggle & ToggleGroup Formatting Bar (<Toggle /> · <ToggleGroup />)'}</Label>
                   <div className="flex flex-wrap items-center gap-2 pt-1">
-                    <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)]">
+                    <div className="liquid-pill-group">
                       <Toggle
                         size="sm"
                         pressed={toggleBold}
@@ -624,7 +624,7 @@ export const DevelopmentShowcaseView: React.FC = () => {
                       </Toggle>
                     </div>
 
-                    <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)]">
+                    <div className="liquid-pill-group">
                       {(
                         [
                           { id: 'left', icon: 'fa-solid fa-align-left' },
@@ -644,7 +644,7 @@ export const DevelopmentShowcaseView: React.FC = () => {
                       ))}
                     </div>
 
-                    <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)]">
+                    <div className="liquid-pill-group">
                       {(
                         [
                           { id: 'spatial', icon: 'fa-solid fa-cubes', label: '3D' },
@@ -670,52 +670,52 @@ export const DevelopmentShowcaseView: React.FC = () => {
 
                 {/* Brand & OAuth Button Suite */}
                 <div>
-                  <Label>Social, OAuth & Passkey Liquid Glass Buttons</Label>
+                  <Label>Social, OAuth & Passkey Chromatic Caustic Liquid Glass Buttons</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-apple"
                       onClick={() => addToast('Apple ID OAuth', 'Signed in with Apple.')}
                     >
                       Apple ID
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-google"
                       onClick={() => addToast('Google Workspace OAuth', 'Signed in with Google.')}
                     >
                       Google
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-github"
                       onClick={() => addToast('GitHub OAuth', 'Connected repository scope.')}
                     >
                       GitHub
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-x-twitter"
                       onClick={() => addToast('X.com OAuth', 'Verified handle.')}
                     >
                       X.com
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-facebook"
                       onClick={() => addToast('Facebook OAuth', 'Connected Meta Business.')}
                     >
                       Facebook
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-discord"
                       onClick={() => addToast('Discord OAuth', 'Webhook linked.')}
                     >
                       Discord
                     </Button>
                     <Button
-                      variant="secondary"
+                      variant="glass-pill"
                       leftFaIcon="fa-brands fa-stripe"
                       onClick={() => addToast('Stripe Connect', 'Merchant ledger active.')}
                     >

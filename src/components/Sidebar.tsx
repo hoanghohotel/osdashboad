@@ -117,25 +117,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }}
                       title={isCompact ? item.label : undefined}
                       className={`w-full flex items-center cursor-pointer ${
-                        isCompact ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2'
-                      } rounded-xl text-xs font-medium transition-all duration-150 ${
+                        isCompact ? 'justify-center px-2 py-2.5' : 'justify-between px-3.5 py-2'
+                      } rounded-full text-xs font-semibold transition-all duration-200 ${
                         isActive
-                          ? 'bg-[var(--accent-soft)] text-[var(--text-primary)] border border-[var(--accent-border)] shadow-xs'
-                          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--glass-subtle-bg)] border border-transparent'
+                          ? 'liquid-btn-primary text-white'
+                          : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                       }`}
                     >
                       <span className="flex items-center gap-2.5 min-w-0">
                         <FaIcon
                           icon={item.faIcon}
                           className={`text-sm shrink-0 ${
-                            isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'
+                            isActive ? 'text-white' : 'text-[var(--text-muted)]'
                           }`}
                         />
                         {!isCompact && <span className="truncate">{item.label}</span>}
                       </span>
 
                       {!isCompact && typeof item.count === 'number' && item.count > 0 && (
-                        <span className="text-[11px] font-mono-tabular text-[var(--text-muted)] shrink-0">
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-mono-tabular font-bold shrink-0 ${
+                            isActive
+                              ? 'bg-white/25 text-white border border-white/30'
+                              : 'bg-[var(--glass-subtle-bg)] text-[var(--text-secondary)] border border-[var(--glass-border)]'
+                          }`}
+                        >
                           {item.count}
                         </span>
                       )}
@@ -150,22 +156,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Bottom Collapse / Expand Control */}
         <div className="pt-3 border-t border-[var(--glass-border)] mt-3">
           {!isMobileDrawer && (
-            <button
-              type="button"
+            <Button
+              variant="secondary"
               onClick={onToggleCollapse}
               aria-label={collapsed ? t.app.expandSidebar : t.app.collapseSidebar}
-              className={`w-full glass-interactive rounded-xl py-2 px-3 flex items-center cursor-pointer ${
-                isCompact ? 'justify-center' : 'justify-between'
-              } text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]`}
+              className={`w-full ${isCompact ? 'justify-center px-0' : 'justify-between px-4'}`}
             >
               {!isCompact && <span className="truncate">{t.app.collapseSidebar}</span>}
               <FaIcon
-                icon={
-                  isCompact ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'
-                }
+                icon={isCompact ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'}
                 className="text-xs shrink-0"
               />
-            </button>
+            </Button>
           )}
         </div>
       </div>

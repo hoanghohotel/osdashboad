@@ -81,7 +81,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
             </Button>
           </div>
 
-          <div className="p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)] flex items-center gap-1">
+          <div className="liquid-pill-group">
             {(['daily', 'weekly', 'monthly'] as ChartGranularity[]).map((item) => {
               const active = granularity === item;
               return (
@@ -89,10 +89,10 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
                   key={item}
                   type="button"
                   onClick={() => onChangeGranularity(item)}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                  className={`px-3.5 py-1 rounded-full text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     active
-                      ? 'accent-btn shadow-xs'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                      ? 'liquid-btn-primary text-white'
+                      : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                   }`}
                 >
                   {t.chart[item]}

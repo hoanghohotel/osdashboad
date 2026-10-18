@@ -64,33 +64,33 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const variantClasses: Record<ButtonVariant, string> = {
-      default: 'accent-btn text-white font-semibold',
+      default: 'liquid-btn-primary text-white font-semibold',
       secondary:
-        'glass-interactive text-[var(--text-primary)] font-medium hover:text-[var(--text-primary)]',
+        'liquid-btn text-[var(--text-primary)] font-semibold hover:text-[var(--text-primary)]',
       outline:
-        'bg-transparent border border-[var(--glass-border-strong)] text-[var(--text-primary)] hover:bg-[var(--glass-subtle-bg)] font-medium shadow-2xs',
+        'liquid-btn-outline text-[var(--text-primary)] font-semibold',
       ghost:
-        'bg-transparent border border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--glass-subtle-bg)] font-medium',
+        'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium',
       destructive:
-        'bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-sm border border-rose-400/30',
+        'liquid-btn-destructive text-white font-semibold',
       success:
-        'bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-sm border border-emerald-400/30',
+        'liquid-btn-success text-white font-semibold',
       warning:
-        'bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold shadow-sm border border-amber-300/40',
+        'liquid-btn-warning text-slate-950 font-semibold',
       'glass-pill':
-        'glass-floating rounded-full! text-[var(--text-primary)] font-semibold hover:scale-[1.02] active:scale-[0.98]',
-      link: 'bg-transparent text-[var(--accent-primary)] underline-offset-4 hover:underline font-medium px-0!',
+        'liquid-btn-caustic text-[var(--text-primary)] font-semibold',
+      link: 'bg-transparent text-[var(--accent-primary)] underline-offset-4 hover:underline font-semibold px-0!',
     };
 
     const sizeClasses: Record<ButtonSize, string> = {
-      xs: 'h-7 px-2.5 text-[11px] rounded-lg gap-1',
-      sm: 'h-8 px-3 text-xs rounded-xl gap-1.5',
-      default: 'h-9 px-4 py-2 text-xs rounded-xl gap-2',
-      lg: 'h-11 px-5 text-sm rounded-2xl gap-2.5',
-      xl: 'h-12 px-6 text-sm rounded-2xl gap-3',
-      'icon-sm': 'h-7 w-7 p-0 rounded-lg justify-center',
-      icon: 'h-9 w-9 p-0 rounded-xl justify-center',
-      'icon-lg': 'h-11 w-11 p-0 rounded-2xl justify-center',
+      xs: 'h-7 px-3 text-[11px] rounded-full gap-1.5',
+      sm: 'h-8.5 px-3.5 text-xs rounded-full gap-1.5',
+      default: 'h-9.5 px-4.5 py-2 text-xs rounded-full gap-2',
+      lg: 'h-11 px-5.5 text-sm rounded-full gap-2.5',
+      xl: 'h-12 px-6.5 text-sm rounded-full gap-3',
+      'icon-sm': 'h-7.5 w-7.5 p-0 rounded-full justify-center',
+      icon: 'h-9.5 w-9.5 p-0 rounded-full justify-center',
+      'icon-lg': 'h-11 w-11 p-0 rounded-full justify-center',
     };
 
     return (
@@ -98,7 +98,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={props.type || 'button'}
         disabled={disabled || loading}
-        className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 transition-all duration-150 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] disabled:pointer-events-none disabled:opacity-45 cursor-pointer ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+        className={`inline-flex items-center justify-center whitespace-nowrap shrink-0 transition-all duration-200 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] disabled:pointer-events-none disabled:opacity-45 cursor-pointer ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
         {...props}
       >
         {loading && <FaIcon icon="fa-solid fa-circle-notch" className="fa-spin text-xs" />}
@@ -106,7 +106,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {children}
         {!loading && rightFaIcon && <FaIcon icon={rightFaIcon} />}
         {kbd && (
-          <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-mono-tabular rounded bg-black/15 dark:bg-white/15 text-current opacity-85">
+          <kbd className="ml-1 px-1.5 py-0.5 text-[10px] font-mono-tabular rounded-full bg-black/15 dark:bg-white/15 border border-white/20 text-current opacity-90">
             {kbd}
           </kbd>
         )}
@@ -122,7 +122,7 @@ export const ButtonGroup: React.FC<{
 }> = ({ className = '', children }) => (
   <div
     role="group"
-    className={`inline-flex items-center p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)] gap-1 ${className}`}
+    className={`liquid-pill-group ${className}`}
   >
     {children}
   </div>
@@ -138,20 +138,20 @@ export const Toggle: React.FC<{
 }> = ({ pressed, onPressedChange, size = 'default', ariaLabel, className = '', children }) => {
   const sz =
     size === 'sm'
-      ? 'h-8 px-2.5 text-xs'
+      ? 'h-8 px-3 text-xs'
       : size === 'lg'
-      ? 'h-10 px-4 text-sm'
-      : 'h-9 px-3 text-xs';
+      ? 'h-10.5 px-4.5 text-sm'
+      : 'h-9 px-3.5 text-xs';
   return (
     <button
       type="button"
       aria-pressed={pressed}
       aria-label={ariaLabel}
       onClick={() => onPressedChange(!pressed)}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-xl font-medium transition-all cursor-pointer active:scale-95 ${sz} ${
+      className={`inline-flex items-center justify-center gap-1.5 rounded-full font-semibold transition-all cursor-pointer active:scale-95 ${sz} ${
         pressed
-          ? 'bg-[var(--accent-soft)] text-[var(--accent-primary)] border border-[var(--accent-border)] shadow-2xs font-semibold'
-          : 'glass-interactive text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+          ? 'liquid-btn-primary text-white'
+          : 'liquid-btn text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
       } ${className}`}
     >
       {children}
@@ -577,7 +577,7 @@ export const TabsList: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
 }) => (
   <div
     role="tablist"
-    className={`inline-flex items-center gap-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)] p-1 ${className}`}
+    className={`liquid-pill-group ${className}`}
     {...props}
   >
     {children}
@@ -597,10 +597,10 @@ export const TabsTrigger: React.FC<{
       role="tab"
       aria-selected={active}
       onClick={() => ctx?.onValueChange(value)}
-      className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-all cursor-pointer ${
+      className={`inline-flex items-center justify-center gap-1.5 whitespace-nowrap shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
         active
-          ? 'accent-btn shadow-xs'
-          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+          ? 'liquid-btn-primary text-white'
+          : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
       } ${className}`}
     >
       {children}

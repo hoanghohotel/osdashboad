@@ -469,7 +469,7 @@ const DashboardWorkspace: React.FC = () => {
 
                       {/* Date-Range Selector & Primary Contextual Actions */}
                       <div className="flex flex-wrap items-center gap-2 shrink-0">
-                        <div className="p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)] flex items-center gap-1 overflow-x-auto">
+                        <div className="liquid-pill-group overflow-x-auto">
                           {(['today', '7d', '30d', '90d', '12m'] as DateRangeKey[]).map((rk) => {
                             const active = dateRange === rk;
                             return (
@@ -480,10 +480,10 @@ const DashboardWorkspace: React.FC = () => {
                                   setDateRange(rk);
                                   triggerRefresh();
                                 }}
-                                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                                   active
-                                    ? 'accent-btn'
-                                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                                    ? 'liquid-btn-primary text-white'
+                                    : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                                 }`}
                               >
                                 {t.welcome.ranges[rk]}

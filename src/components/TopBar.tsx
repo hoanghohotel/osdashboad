@@ -114,14 +114,15 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Workspace Selector Dropdown */}
           <div className="relative">
-            <button
-              type="button"
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => setOpenMenu(openMenu === 'workspace' ? null : 'workspace')}
-              className="glass-interactive px-2.5 py-1.5 rounded-xl flex items-center gap-2 text-xs font-medium text-[var(--text-primary)] max-w-[170px] sm:max-w-[210px] cursor-pointer"
+              className="max-w-[170px] sm:max-w-[210px]"
             >
               <span className="truncate">{activeWorkspace.name}</span>
               <FaIcon icon="fa-solid fa-chevron-down" className="text-[10px] text-[var(--text-muted)] shrink-0" />
-            </button>
+            </Button>
 
             {openMenu === 'workspace' && (
               <div className="glass-floating absolute left-0 mt-2 w-72 rounded-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150">
@@ -171,13 +172,13 @@ export const TopBar: React.FC<TopBarProps> = ({
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="w-full glass-interactive px-3.5 py-2 rounded-xl flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
+            className="w-full liquid-btn px-4 py-2 rounded-full flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
           >
             <span className="flex items-center gap-2.5 truncate">
               <FaIcon icon="fa-solid fa-magnifying-glass" className="text-xs text-[var(--text-muted)] shrink-0" />
               <span className="truncate">{t.app.searchPlaceholder}</span>
             </span>
-            <kbd className="px-1.5 py-0.5 text-[10px] font-mono-tabular rounded border border-[var(--glass-border-strong)] bg-[var(--glass-subtle-bg)] text-[var(--text-secondary)] shrink-0 flex items-center gap-0.5">
+            <kbd className="px-2 py-0.5 text-[10px] font-mono-tabular rounded-full border border-[var(--glass-border-strong)] bg-[var(--glass-subtle-bg)] text-[var(--text-secondary)] shrink-0 flex items-center gap-0.5">
               ⌘K
             </kbd>
           </button>
@@ -198,7 +199,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* Device Mockup Studio Switcher (Full / MacBook / iPad / iPhone) */}
           {onSelectDeviceMode && (
-            <div className="hidden lg:flex items-center gap-0.5 p-1 rounded-xl bg-[var(--glass-subtle-bg)] border border-[var(--glass-border)]">
+            <div className="hidden lg:inline-flex liquid-pill-group">
               {(
                 [
                   { id: 'full', title: 'Full Desktop', icon: 'fa-solid fa-expand' },
@@ -215,10 +216,10 @@ export const TopBar: React.FC<TopBarProps> = ({
                     onClick={() => onSelectDeviceMode(dev.id)}
                     title={`View on ${dev.title}`}
                     aria-label={`View on ${dev.title}`}
-                    className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs transition-all cursor-pointer ${
+                    className={`w-7.5 h-7.5 rounded-full flex items-center justify-center text-xs transition-all cursor-pointer ${
                       active
-                        ? 'accent-btn text-white shadow-xs'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                        ? 'liquid-btn-primary text-white'
+                        : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                     }`}
                   >
                     <FaIcon icon={dev.icon} className="text-[11px]" />
@@ -336,21 +337,17 @@ export const TopBar: React.FC<TopBarProps> = ({
                     {LANGUAGE_OPTIONS.map((opt) => {
                       const active = language === opt.code;
                       return (
-                        <button
+                        <Button
                           key={opt.code}
-                          type="button"
+                          variant={active ? 'default' : 'secondary'}
+                          size="sm"
                           onClick={() => {
                             setLanguage(opt.code);
                             addToast(`${opt.label}`, undefined, 'info');
                           }}
-                          className={`px-2.5 py-1.5 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
-                            active
-                              ? 'accent-btn'
-                              : 'glass-interactive text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                          }`}
                         >
                           {opt.short}
-                        </button>
+                        </Button>
                       );
                     })}
                   </div>
