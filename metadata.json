@@ -1,0 +1,6 @@
+{
+  "name": "AuraOS — Liquid Glass Admin Workspace",
+  "description": "macOS-inspired Liquid Glass E-Commerce & SaaS Analytics Admin Dashboard with Light/Dark modes, 6 dynamic system accents, and trilingual support (VI/EN/ZH).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

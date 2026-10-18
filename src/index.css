@@ -1,0 +1,358 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Light Mode Default Tokens */
+    --bg-canvas: #f2f4f8;
+    --bg-canvas-secondary: #e8ecf4;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    /* Liquid Glass Surface Hierarchy - Light Mode */
+    --glass-primary-bg: rgba(255, 255, 255, 0.72);
+    --glass-secondary-bg: rgba(255, 255, 255, 0.58);
+    --glass-floating-bg: rgba(255, 255, 255, 0.88);
+    --glass-interactive-bg: rgba(255, 255, 255, 0.65);
+    --glass-interactive-hover: rgba(255, 255, 255, 0.9);
+    --glass-subtle-bg: rgba(15, 23, 42, 0.035);
+
+    /* Borders & Specular Highlights - Light Mode */
+    --glass-border: rgba(15, 23, 42, 0.08);
+    --glass-border-strong: rgba(15, 23, 42, 0.14);
+    --glass-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.85), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+    --glass-shadow-sm: 0 2px 10px -2px rgba(15, 23, 42, 0.05), 0 1px 3px 0 rgba(15, 23, 42, 0.03);
+    --glass-shadow-md: 0 10px 30px -6px rgba(15, 23, 42, 0.07), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+    --glass-shadow-lg: 0 24px 48px -12px rgba(15, 23, 42, 0.14), 0 8px 20px -4px rgba(15, 23, 42, 0.06);
+
+    /* Default Accent: Cupertino Blue */
+    --accent-primary: #007aff;
+    --accent-hover: #0062cc;
+    --accent-soft: rgba(0, 122, 255, 0.12);
+    --accent-border: rgba(0, 122, 255, 0.28);
+    --accent-glow: rgba(0, 122, 255, 0.22);
+
+    /* Ambient Mesh Orbs */
+    --orb-1: rgba(0, 122, 255, 0.18);
+    --orb-2: rgba(175, 82, 222, 0.14);
+    --orb-3: rgba(56, 189, 248, 0.16);
+
+    /* Blur Strength */
+    --blur-primary: 24px;
+    --blur-secondary: 18px;
+    --blur-floating: 32px;
+  }
+
+  html.dark {
+    /* Dark Mode Tokens */
+    --bg-canvas: #090b10;
+    --bg-canvas-secondary: #111520;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Liquid Glass Surface Hierarchy - Dark Mode */
+    --glass-primary-bg: rgba(20, 25, 35, 0.72);
+    --glass-secondary-bg: rgba(26, 32, 44, 0.56);
+    --glass-floating-bg: rgba(18, 22, 32, 0.88);
+    --glass-interactive-bg: rgba(38, 46, 62, 0.55);
+    --glass-interactive-hover: rgba(51, 62, 82, 0.75);
+    --glass-subtle-bg: rgba(255, 255, 255, 0.045);
+
+    /* Borders & Specular Highlights - Dark Mode */
+    --glass-border: rgba(255, 255, 255, 0.085);
+    --glass-border-strong: rgba(255, 255, 255, 0.16);
+    --glass-highlight: inset 0 1px 0 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --glass-shadow-sm: 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+    --glass-shadow-md: 0 12px 32px -6px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+    --glass-shadow-lg: 0 28px 60px -12px rgba(0, 0, 0, 0.65), 0 12px 24px -4px rgba(0, 0, 0, 0.45);
+
+    /* Ambient Mesh Orbs Dark */
+    --orb-1: rgba(10, 132, 255, 0.16);
+    --orb-2: rgba(191, 90, 242, 0.12);
+    --orb-3: rgba(48, 209, 88, 0.09);
+  }
+
+  /* 6 macOS Sonoma System Accent Themes */
+  [data-accent="blue"] {
+    --accent-primary: #007aff;
+    --accent-hover: #0062cc;
+    --accent-soft: rgba(0, 122, 255, 0.13);
+    --accent-border: rgba(0, 122, 255, 0.32);
+    --accent-glow: rgba(0, 122, 255, 0.24);
+    --orb-1: rgba(0, 122, 255, 0.2);
+  }
+  html.dark[data-accent="blue"] {
+    --accent-primary: #0a84ff;
+    --accent-hover: #409cff;
+    --accent-soft: rgba(10, 132, 255, 0.18);
+    --accent-border: rgba(10, 132, 255, 0.38);
+    --accent-glow: rgba(10, 132, 255, 0.28);
+    --orb-1: rgba(10, 132, 255, 0.18);
+  }
+
+  [data-accent="purple"] {
+    --accent-primary: #9333ea;
+    --accent-hover: #7e22ce;
+    --accent-soft: rgba(147, 51, 234, 0.13);
+    --accent-border: rgba(147, 51, 234, 0.32);
+    --accent-glow: rgba(147, 51, 234, 0.24);
+    --orb-1: rgba(147, 51, 234, 0.2);
+  }
+  html.dark[data-accent="purple"] {
+    --accent-primary: #bf5af2;
+    --accent-hover: #d084f5;
+    --accent-soft: rgba(191, 90, 242, 0.18);
+    --accent-border: rgba(191, 90, 242, 0.38);
+    --accent-glow: rgba(191, 90, 242, 0.28);
+    --orb-1: rgba(191, 90, 242, 0.18);
+  }
+
+  [data-accent="pink"] {
+    --accent-primary: #e11d48;
+    --accent-hover: #be123c;
+    --accent-soft: rgba(225, 29, 72, 0.12);
+    --accent-border: rgba(225, 29, 72, 0.3);
+    --accent-glow: rgba(225, 29, 72, 0.22);
+    --orb-1: rgba(225, 29, 72, 0.18);
+  }
+  html.dark[data-accent="pink"] {
+    --accent-primary: #ff375f;
+    --accent-hover: #ff6482;
+    --accent-soft: rgba(255, 55, 95, 0.18);
+    --accent-border: rgba(255, 55, 95, 0.38);
+    --accent-glow: rgba(255, 55, 95, 0.26);
+    --orb-1: rgba(255, 55, 95, 0.17);
+  }
+
+  [data-accent="orange"] {
+    --accent-primary: #ea580c;
+    --accent-hover: #c2410c;
+    --accent-soft: rgba(234, 88, 12, 0.13);
+    --accent-border: rgba(234, 88, 12, 0.32);
+    --accent-glow: rgba(234, 88, 12, 0.22);
+    --orb-1: rgba(234, 88, 12, 0.18);
+  }
+  html.dark[data-accent="orange"] {
+    --accent-primary: #ff9f0a;
+    --accent-hover: #ffb340;
+    --accent-soft: rgba(255, 159, 10, 0.18);
+    --accent-border: rgba(255, 159, 10, 0.38);
+    --accent-glow: rgba(255, 159, 10, 0.26);
+    --orb-1: rgba(255, 159, 10, 0.16);
+  }
+
+  [data-accent="green"] {
+    --accent-primary: #059669;
+    --accent-hover: #047857;
+    --accent-soft: rgba(5, 150, 105, 0.13);
+    --accent-border: rgba(5, 150, 105, 0.32);
+    --accent-glow: rgba(5, 150, 105, 0.22);
+    --orb-1: rgba(5, 150, 105, 0.18);
+  }
+  html.dark[data-accent="green"] {
+    --accent-primary: #30d158;
+    --accent-hover: #5be07c;
+    --accent-soft: rgba(48, 209, 88, 0.18);
+    --accent-border: rgba(48, 209, 88, 0.38);
+    --accent-glow: rgba(48, 209, 88, 0.26);
+    --orb-1: rgba(48, 209, 88, 0.16);
+  }
+
+  [data-accent="graphite"] {
+    --accent-primary: #475569;
+    --accent-hover: #334155;
+    --accent-soft: rgba(71, 85, 105, 0.13);
+    --accent-border: rgba(71, 85, 105, 0.32);
+    --accent-glow: rgba(71, 85, 105, 0.2);
+    --orb-1: rgba(100, 116, 139, 0.18);
+  }
+  html.dark[data-accent="graphite"] {
+    --accent-primary: #94a3b8;
+    --accent-hover: #cbd5e1;
+    --accent-soft: rgba(148, 163, 184, 0.16);
+    --accent-border: rgba(148, 163, 184, 0.35);
+    --accent-glow: rgba(148, 163, 184, 0.22);
+    --orb-1: rgba(148, 163, 184, 0.14);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color 220ms cubic-bezier(0.16, 1, 0.3, 1), color 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .font-mono-tabular {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Reusable Liquid Glass Surface Variants */
+.glass-primary {
+  background: var(--glass-primary-bg);
+  backdrop-filter: blur(var(--blur-primary)) saturate(185%);
+  -webkit-backdrop-filter: blur(var(--blur-primary)) saturate(185%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-md);
+}
+
+.glass-secondary {
+  background: var(--glass-secondary-bg);
+  backdrop-filter: blur(var(--blur-secondary)) saturate(165%);
+  -webkit-backdrop-filter: blur(var(--blur-secondary)) saturate(165%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-sm);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1), border-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-secondary-interactive:hover {
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-md);
+}
+
+.glass-floating {
+  background: var(--glass-floating-bg);
+  backdrop-filter: blur(var(--blur-floating)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--blur-floating)) saturate(200%);
+  border: 1px solid var(--glass-border-strong);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-lg);
+}
+
+.glass-interactive {
+  background: var(--glass-interactive-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-interactive:hover {
+  background: var(--glass-interactive-hover);
+  border-color: var(--glass-border-strong);
+}
+
+.glass-interactive:active {
+  transform: scale(0.985);
+}
+
+/* Accent-tinted interactive control */
+.accent-btn {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.32), 0 4px 14px -2px var(--accent-glow);
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1), transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accent-btn:hover {
+  background-color: var(--accent-hover);
+}
+
+.accent-btn:active {
+  transform: scale(0.985);
+}
+
+.accent-surface {
+  background-color: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent-primary);
+}
+
+/* Fallback when backdrop-filter is unsupported */
+@supports not ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
+  .glass-primary,
+  .glass-secondary,
+  .glass-floating,
+  .glass-interactive {
+    background-color: var(--bg-canvas-secondary);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtle custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Device Mockup Viewport Responsive Overrides */
+.device-viewport-iphone .xl\:grid-cols-4,
+.device-viewport-iphone .xl\:grid-cols-3,
+.device-viewport-iphone .lg\:grid-cols-3,
+.device-viewport-iphone .lg\:grid-cols-2,
+.device-viewport-iphone .md\:grid-cols-2,
+.device-viewport-iphone .sm\:grid-cols-2 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.device-viewport-iphone .lg\:flex-row,
+.device-viewport-iphone .sm\:flex-row {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.device-viewport-iphone aside.hidden.lg\:block,
+.device-viewport-iphone div.hidden.md\:block,
+.device-viewport-iphone .hidden.sm\:inline,
+.device-viewport-iphone .hidden.xl\:inline,
+.device-viewport-iphone .hidden.xl\:flex,
+.device-viewport-iphone .hidden.sm\:inline-flex {
+  display: none !important;
+}
+
+.device-viewport-iphone button.lg\:hidden,
+.device-viewport-iphone button.md\:hidden {
+  display: inline-flex !important;
+}
+
+.device-viewport-iphone div.md\:hidden {
+  display: block !important;
+}
+
+.device-viewport-ipad-portrait .xl\:grid-cols-4,
+.device-viewport-ipad-portrait .lg\:grid-cols-3 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.device-viewport-ipad-portrait aside.hidden.lg\:block {
+  display: none !important;
+}
+
+.device-viewport-ipad-portrait button.lg\:hidden {
+  display: inline-flex !important;
+}
+
+
