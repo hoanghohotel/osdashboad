@@ -51,7 +51,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch {
       // ignore storage errors
     }
-    return 'dark';
+    return 'light';
   });
 
   const [accent, setAccentState] = useState<AccentColor>(() => {

@@ -62,6 +62,15 @@ export const MetricCard: React.FC<MetricCardProps> = ({
       glassVariant="secondary"
       interactiveHover
       onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? label : undefined}
+      onKeyDown={onClick ? (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      } : undefined}
       className={onClick ? 'cursor-pointer' : ''}
     >
       <CardContent>

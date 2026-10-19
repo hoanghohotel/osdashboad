@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ToastProvider, useToast } from './context/ToastContext';
@@ -10,7 +10,7 @@ import { RevenueChart } from './components/RevenueChart';
 import { OrdersTable } from './components/OrdersTable';
 import { OverviewWidgets } from './components/OverviewWidgets';
 import { AuthenticatedUser, LoginScreen } from './components/LoginScreen';
-import { DevelopmentShowcaseView } from './components/DevelopmentShowcaseView';
+const DevelopmentShowcaseView = lazy(() => import('./components/DevelopmentShowcaseView').then(module => ({ default: module.DevelopmentShowcaseView })));
 import {
   DeviceHomeScreen,
   DeviceInternalDock,
@@ -508,7 +508,11 @@ const DashboardWorkspace: React.FC = () => {
                 lowStockCount={lowStockCount}
               />
 
-              <main className="flex-1 min-w-0 space-y-6">
+              <main className="workspace-content flex-1 min-w-0 space-y-6">
+                <div role="note" className="demo-notice">
+                  <FaIcon icon="fa-solid fa-circle-info" />
+                  {language === 'vi' ? 'Bản trải nghiệm — dữ liệu mẫu. Thay đổi sẽ đặt lại khi tải lại trang.' : language === 'zh' ? '体验版 — 示例数据。刷新后更改将重置。' : 'Demo workspace — sample data. Changes reset on reload.'}
+                </div>
                 {/* Page Breadcrumb & Welcome / Section Header */}
                 <Card glassVariant="secondary">
                   <CardContent>
@@ -709,7 +713,7 @@ const DashboardWorkspace: React.FC = () => {
                   </div>
                 )}
 
-                {activeSection === 'development' && <DevelopmentShowcaseView />}
+                {activeSection === 'development' && <Suspense fallback={<p role="status">{language === 'vi' ? 'Đang tải…' : language === 'zh' ? '加载中…' : 'Loading…'}</p>}><DevelopmentShowcaseView /></Suspense>}
 
                 {activeSection === 'analytics' && (
                   <div className="space-y-6">

@@ -16,6 +16,10 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
   const imageSrc = customWallpaperUrl.trim() || activeWallpaper.svgDataUri;
   const baseCanvas = mode === 'dark' ? activeWallpaper.darkCanvas : activeWallpaper.lightCanvas;
 
+  if (!isInsideDevice) {
+    return <div aria-hidden="true" className="fixed inset-0 -z-10 pointer-events-none" style={{ background: 'var(--bg-canvas)' }} />;
+  }
+
   return (
     <div
       aria-hidden="true"
