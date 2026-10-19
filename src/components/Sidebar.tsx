@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { NavSectionId } from '../types/dashboard';
+import { AppleSquircleIcon } from './AppleDesignResources';
 import { Button, FaIcon } from './ui/liquid-shadcn';
 
 interface SidebarProps {
@@ -38,7 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       label: t.nav.workspaceGroup,
       items: [
-        { id: 'overview', label: t.nav.overview, faIcon: 'fa-solid fa-gauge-high' },
+        { id: 'overview', label: t.nav.overview, faIcon: 'fa-solid fa-compass' },
         { id: 'analytics', label: t.nav.analytics, faIcon: 'fa-solid fa-chart-line' },
         { id: 'reports', label: t.nav.reports, faIcon: 'fa-solid fa-file-invoice-dollar' },
       ],
@@ -78,11 +79,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
     return (
       <div className="flex flex-col flex-1 h-full justify-between">
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {isMobileDrawer && (
             <div className="flex items-center justify-between px-2 pb-2 border-b border-[var(--glass-border)]">
               <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <FaIcon icon="fa-solid fa-layer-group" className="text-[var(--accent-primary)]" />
+                <AppleSquircleIcon iconId="overview" size="xs" active />
                 <span>{t.app.brand}</span>
               </span>
               <Button
@@ -100,7 +101,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {navGroups.map((group) => (
             <div key={group.label} className="space-y-1">
               {!isCompact && (
-                <p className="px-3 text-[11px] font-medium text-[var(--text-muted)] truncate">
+                <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)] truncate">
                   {group.label}
                 </p>
               )}
@@ -117,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }}
                       title={isCompact ? item.label : undefined}
                       className={`w-full flex items-center cursor-pointer ${
-                        isCompact ? 'justify-center px-2 py-2' : 'justify-between px-3.5 py-2'
+                        isCompact ? 'justify-center px-1.5 py-1.5' : 'justify-between px-2.5 py-1.5'
                       } rounded-full text-xs font-semibold transition-all duration-200 ${
                         isActive
                           ? 'liquid-btn-primary text-white'
@@ -125,11 +126,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }`}
                     >
                       <span className="flex items-center gap-2.5 min-w-0">
-                        <FaIcon
-                          icon={item.faIcon}
-                          className={`text-sm shrink-0 ${
-                            isActive ? 'text-white' : 'text-[var(--text-muted)]'
-                          }`}
+                        <AppleSquircleIcon
+                          iconId={item.id}
+                          size="xs"
+                          active={isActive}
                         />
                         {!isCompact && <span className="truncate">{item.label}</span>}
                       </span>
@@ -154,7 +154,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Bottom Collapse / Expand Control — Pinned at the bottom of the full-height sidebar */}
-        <div className="pt-3 border-t border-[var(--glass-border)] mt-4 shrink-0">
+        <div className="pt-3 border-t border-[var(--glass-border)] mt-3 shrink-0">
           {!isMobileDrawer && (
             <Button
               variant="secondary"

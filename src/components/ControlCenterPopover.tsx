@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ACCENT_SWATCHES, useTheme } from '../context/ThemeContext';
 import { LANGUAGE_OPTIONS, useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
+import { WALLPAPER_PRESETS } from '../data/wallpapers';
 import { FaIcon } from './ui/liquid-shadcn';
 
 interface ControlCenterPopoverProps {
@@ -11,7 +12,17 @@ interface ControlCenterPopoverProps {
 export const ControlCenterPopover: React.FC<ControlCenterPopoverProps> = ({
   onLockWorkspace,
 }) => {
-  const { mode, toggleMode, accent, setAccent, highRefraction, setHighRefraction } = useTheme();
+  const {
+    mode,
+    toggleMode,
+    accent,
+    setAccent,
+    highRefraction,
+    setHighRefraction,
+    wallpaperId,
+    customWallpaperUrl,
+    setWallpaperId,
+  } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { addToast } = useToast();
 
@@ -253,6 +264,41 @@ export const ControlCenterPopover: React.FC<ControlCenterPopoverProps> = ({
                 {opt.short}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* 10 Official Apple Wallpapers Quick Grid */}
+        <div className="pt-1.5 space-y-1.5">
+          <div className="flex items-center justify-between text-[10px] font-semibold text-[var(--text-muted)]">
+            <span>Apple HIG Wallpapers (10)</span>
+            <span className="font-mono-tabular">Dynamic</span>
+          </div>
+          <div className="grid grid-cols-5 gap-1.5">
+            {WALLPAPER_PRESETS.map((wp) => {
+              const isSelected = !customWallpaperUrl && wallpaperId === wp.id;
+              return (
+                <button
+                  key={wp.id}
+                  type="button"
+                  onClick={() => {
+                    setWallpaperId(wp.id);
+                    addToast(wp.name[language], wp.badge, 'info');
+                  }}
+                  title={wp.name[language]}
+                  className={`relative aspect-16/10 rounded-lg overflow-hidden border transition-all cursor-pointer ${
+                    isSelected
+                      ? 'border-[var(--accent-primary)] ring-1 ring-[var(--accent-primary)] scale-105'
+                      : 'border-white/20 opacity-80 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={mode === 'light' ? wp.lightSvgDataUri : wp.svgDataUri}
+                    alt={wp.name[language]}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

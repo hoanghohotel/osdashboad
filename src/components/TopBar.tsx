@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext';
 import { WALLPAPER_PRESETS } from '../data/wallpapers';
 import { ActivityEvent, DeviceMode, NavSectionId, WorkspaceOption } from '../types/dashboard';
 import { ControlCenterPopover } from './ControlCenterPopover';
+import { AppleSquircleIcon, AppleTrafficLights } from './AppleDesignResources';
 import { AuthenticatedUser } from './LoginScreen';
 import { Avatar, Button, FaIcon } from './ui/liquid-shadcn';
 
@@ -81,44 +82,37 @@ export const TopBar: React.FC<TopBarProps> = ({
             size="icon"
             onClick={onOpenMobileSidebar}
             aria-label="Open navigation menu"
-            className="lg:hidden"
+            className="md:hidden"
           >
             <FaIcon icon="fa-solid fa-bars" />
           </Button>
 
-          {/* Subtle macOS Window Controls */}
-          <div className="hidden xl:flex items-center gap-1.5 mr-1">
-            <button
-              type="button"
-              onClick={onLogout}
-              title={t.app.signOut}
-              aria-label={t.app.signOut}
-              className="w-3 h-3 rounded-full bg-[#ff5f57] border border-black/10 hover:opacity-80 transition-opacity cursor-pointer"
-            />
-            <span className="w-3 h-3 rounded-full bg-[#febc2e] border border-black/10" />
-            <span className="w-3 h-3 rounded-full bg-[#28c840] border border-black/10" />
-          </div>
+          {/* Official Apple macOS Window Controls (Traffic Lights with hover × − + glyphs) */}
+          <AppleTrafficLights
+            className="hidden xl:inline-flex mr-1"
+            onClose={onLogout}
+            onMinimize={() => onNavigate('settings')}
+            onZoom={() => {
+              if (onSelectDeviceMode) {
+                onSelectDeviceMode(deviceMode === 'full' ? 'macbook' : 'full');
+              }
+            }}
+            closeTitle={t.app.signOut}
+            minimizeTitle={t.nav.settings}
+            zoomTitle="Toggle MacBook Pro Bezel / Full Screen"
+          />
 
           <button
             type="button"
             onClick={() => onNavigate('overview')}
             className="flex items-center gap-2.5 text-left group focus:outline-none shrink-0 cursor-pointer"
           >
-            <div
-              data-active="true"
-              className="liquid-dock-icon w-8.5 h-8.5 flex items-center justify-center transition-transform duration-150 group-hover:scale-105"
-              style={
-                {
-                  '--dock-tint': 'rgba(56, 189, 248, 0.3)',
-                  '--dock-glow': 'rgba(56, 189, 248, 0.38)',
-                } as React.CSSProperties
-              }
-            >
-              <FaIcon
-                icon="fa-solid fa-layer-group"
-                className="text-xs text-[var(--accent-primary)] relative z-10"
-              />
-            </div>
+            <AppleSquircleIcon
+              iconId="overview"
+              size="sm"
+              active
+              className="group-hover:scale-105"
+            />
             <span className="text-base font-bold tracking-tight text-[var(--text-primary)] whitespace-nowrap">
               {t.app.brand}
             </span>

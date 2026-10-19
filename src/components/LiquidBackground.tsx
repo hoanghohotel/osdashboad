@@ -13,7 +13,11 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
   const { mode, activeWallpaper, customWallpaperUrl, wallpaperBlur, wallpaperDim } = useTheme();
 
   const isInsideDevice = contained || embedded;
-  const imageSrc = customWallpaperUrl.trim() || activeWallpaper.svgDataUri;
+  const dynamicPresetUri =
+    mode === 'light' && activeWallpaper.lightSvgDataUri
+      ? activeWallpaper.lightSvgDataUri
+      : activeWallpaper.svgDataUri;
+  const imageSrc = customWallpaperUrl.trim() || dynamicPresetUri;
   const baseCanvas = mode === 'dark' ? activeWallpaper.darkCanvas : activeWallpaper.lightCanvas;
 
   return (
@@ -24,7 +28,7 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
       } overflow-hidden pointer-events-none select-none transition-colors duration-500`}
       style={{ backgroundColor: baseCanvas }}
     >
-      {/* Selected High-Resolution Wallpaper Artwork Layer */}
+      {/* Official Apple Dynamic Desktop Wallpaper Layer (Light / Dark Adaptive) */}
       <img
         key={imageSrc}
         src={imageSrc}
@@ -33,10 +37,10 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
         className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
         style={{
           filter: `${wallpaperBlur > 0 ? `blur(${wallpaperBlur}px) ` : ''}${
-            mode === 'light' ? 'brightness(1.06) saturate(1.05)' : 'brightness(0.95) saturate(1.12)'
+            mode === 'light' ? 'brightness(1.04) saturate(1.08)' : 'brightness(0.96) saturate(1.16)'
           }`,
           transform: wallpaperBlur > 0 ? 'scale(1.06)' : 'scale(1.01)',
-          opacity: mode === 'dark' ? 0.88 : 0.42,
+          opacity: mode === 'dark' ? 0.92 : 0.72,
         }}
       />
 
@@ -46,8 +50,8 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
         style={{
           background:
             mode === 'dark'
-              ? `rgba(4, 7, 15, ${Math.min(0.82, Math.max(0.08, wallpaperDim / 100))})`
-              : `rgba(244, 247, 252, ${Math.min(0.88, Math.max(0.25, (100 - wallpaperDim) / 130))})`,
+              ? `rgba(4, 7, 15, ${Math.min(0.82, Math.max(0.06, wallpaperDim / 110))})`
+              : `rgba(244, 247, 252, ${Math.min(0.75, Math.max(0.18, wallpaperDim / 135))})`,
         }}
       />
 
@@ -64,7 +68,7 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
 
       {/* 3D Refracting Glass Orb 1 - Top Left */}
       <div
-        className="absolute -top-24 -left-16 w-[440px] h-[440px] rounded-full opacity-70"
+        className="absolute -top-24 -left-16 w-[440px] h-[440px] rounded-full opacity-65"
         style={{
           background:
             mode === 'dark'
@@ -76,7 +80,7 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
 
       {/* 3D Refracting Glass Sphere 2 - Top Right */}
       <div
-        className="absolute top-[12%] right-[6%] w-[360px] h-[360px] rounded-full opacity-65"
+        className="absolute top-[12%] right-[6%] w-[360px] h-[360px] rounded-full opacity-60"
         style={{
           background:
             mode === 'dark'
@@ -86,7 +90,7 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
         }}
       />
 
-      {/* Specular 3D Glass Lens Accent - Subtle geometric depth behind cards */}
+      {/* Specular 3D Glass Lens Accent */}
       <div
         className="hidden lg:block absolute top-[28%] left-[38%] w-64 h-64 rounded-full"
         style={{
@@ -99,13 +103,13 @@ export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
               ? 'inset 0 1px 2px rgba(255,255,255,0.12)'
               : 'inset 0 2px 4px rgba(255,255,255,0.8)',
           filter: 'blur(2px)',
-          opacity: 0.4,
+          opacity: 0.38,
         }}
       />
 
-      {/* Fine Architectural Grid Overlay for Desktop Depth */}
+      {/* Fine Architectural Grid Overlay */}
       <div
-        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.025]"
+        className="absolute inset-0 opacity-[0.018] dark:opacity-[0.022]"
         style={{
           backgroundImage:
             'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',

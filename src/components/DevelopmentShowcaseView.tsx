@@ -38,6 +38,14 @@ import {
   Textarea,
   Toggle,
 } from './ui/liquid-shadcn';
+import {
+  APPLE_BEZEL_FINISHES,
+  APPLE_ICON_SPECS,
+  AppleAppIconId,
+  AppleSquircleIcon,
+  AppleStatusIcons,
+  AppleTrafficLights,
+} from './AppleDesignResources';
 import { ACCENT_SWATCHES, useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 
@@ -195,9 +203,11 @@ export const DevelopmentShowcaseView: React.FC = () => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hoverCardOpen, setHoverCardOpen] = useState(false);
 
-  // Catalog & Icon Search
+  // Catalog & Icon Search + Apple HIG Icon Composer Inspector State
   const [catalogSearch, setCatalogSearch] = useState('');
   const [iconQuery, setIconQuery] = useState('');
+  const [showHIGGrid, setShowHIGGrid] = useState(true);
+  const [inspectedIconId, setInspectedIconId] = useState<AppleAppIconId>('overview');
 
   const showSection = (
     sec: 'buttons' | 'forms' | 'navigation' | 'data' | 'overlays' | 'catalog' | 'icons'
@@ -321,7 +331,202 @@ export const DevelopmentShowcaseView: React.FC = () => {
               ))}
             </div>
 
-            <Badge variant="default">54 / 54 shadcn Primitives Ready</Badge>
+            <Badge variant="default">Apple HIG + 54/54 shadcn Ready</Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* =====================================================================
+       * SECTION 0: OFFICIAL APPLE DESIGN RESOURCES (HIG) STUDIO
+       *            Icon Composer · Golden-Ratio Squircle Grid · Materials · Colors
+       * =================================================================== */}
+      <Card glassVariant="primary">
+        <CardHeader>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <FaIcon icon="fa-brands fa-apple" className="text-[var(--accent-primary)]" />
+                <span>
+                  Apple Design Resources (HIG) — Icon Composer, Product Bezels & Materials
+                </span>
+              </CardTitle>
+              <CardDescription>
+                Engineered per developer.apple.com/design/resources specifications: 1024×1024
+                Golden-Ratio Continuous Squircle Icon Grid, multi-layer Icon Composer vectors,
+                macOS Tahoe Traffic Lights, iOS 26 Status Vectors, and Apple System Colors.
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant={showHIGGrid ? 'default' : 'secondary'}
+                leftFaIcon="fa-solid fa-border-all"
+                onClick={() => setShowHIGGrid((v) => !v)}
+              >
+                <span>{showHIGGrid ? 'HIG Golden Grid: ON' : 'HIG Golden Grid: OFF'}</span>
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          {/* Row 1: Interactive 1024×1024 Icon Composer Inspector + All 16 App Icons */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
+            {/* Left: Large 1024×1024 Golden-Ratio Squircle Template Inspector */}
+            <div className="glass-secondary rounded-2xl p-5 flex flex-col items-center justify-between text-center gap-4">
+              <div className="flex items-center justify-between w-full">
+                <Badge variant="default">1024 × 1024 pt Template</Badge>
+                <span className="text-[11px] font-mono-tabular text-[var(--text-muted)]">
+                  r = 22.37% Superellipse
+                </span>
+              </div>
+
+              <div className="py-2">
+                <AppleSquircleIcon
+                  iconId={inspectedIconId}
+                  size="2xl"
+                  active
+                  showHIGGrid={showHIGGrid}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-[var(--text-primary)]">
+                  {APPLE_ICON_SPECS[inspectedIconId].categoryLabel}
+                </p>
+                <p className="text-[11px] font-mono-tabular text-[var(--text-muted)]">
+                  Stops: {APPLE_ICON_SPECS[inspectedIconId].bgGradient.join(' → ')}
+                </p>
+              </div>
+            </div>
+
+            {/* Right 2 Columns: All 16 Official Apple Icon Composer App & System Icons */}
+            <div className="lg:col-span-2 glass-secondary rounded-2xl p-5 flex flex-col justify-between gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[var(--text-primary)]">
+                  16 Layered Icon Composer Squircles (Click any icon to inspect 1024pt Grid)
+                </span>
+                <Badge variant="secondary">3-Layer SVG + Caustic Sheen</Badge>
+              </div>
+
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 place-items-center">
+                {(Object.keys(APPLE_ICON_SPECS) as AppleAppIconId[]).map((id) => {
+                  const selected = inspectedIconId === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => setInspectedIconId(id)}
+                      className={`flex flex-col items-center gap-1.5 p-1.5 rounded-2xl transition-all cursor-pointer ${
+                        selected
+                          ? 'bg-[var(--accent-soft)] ring-1 ring-[var(--accent-border)] scale-105'
+                          : 'hover:scale-105'
+                      }`}
+                    >
+                      <AppleSquircleIcon
+                        iconId={id}
+                        size="md"
+                        active={selected}
+                        showHIGGrid={showHIGGrid}
+                      />
+                      <span className="text-[10px] font-mono-tabular text-[var(--text-secondary)] truncate max-w-[64px]">
+                        {id}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Permitted Apple Native Chrome Primitives Preview Bar */}
+              <div className="pt-3 border-t border-[var(--glass-border)] flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-semibold text-[var(--text-muted)]">
+                    macOS Window Controls:
+                  </span>
+                  <AppleTrafficLights
+                    onClose={() => addToast('macOS Red Close Control', 'Triggered window close.')}
+                    onMinimize={() =>
+                      addToast('macOS Yellow Minimize Control', 'Triggered window minimize.')
+                    }
+                    onZoom={() => addToast('macOS Green Zoom Control', 'Triggered fullscreen zoom.')}
+                  />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] font-semibold text-[var(--text-muted)]">
+                    iOS / iPadOS Status Vectors:
+                  </span>
+                  <div className="px-3 py-1 rounded-full glass-interactive text-[var(--text-primary)]">
+                    <AppleStatusIcons showCellular show5G batteryPercent={100} />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold text-[var(--text-muted)]">
+                    Hardware Finishes:
+                  </span>
+                  {Object.values(APPLE_BEZEL_FINISHES).map((fin) => (
+                    <span
+                      key={fin.id}
+                      title={fin.name}
+                      className="w-4 h-4 rounded-full border border-white/40 inline-block"
+                      style={{ backgroundColor: fin.swatchHex }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Official Apple HIG System Colors Palette */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[var(--text-primary)]">
+                Apple Human Interface Guidelines — System Semantic Color Tokens (Click to Copy Hex)
+              </span>
+              <span className="text-[11px] font-mono-tabular text-[var(--text-muted)]">
+                iOS 26 · iPadOS 26 · macOS Tahoe 26
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-11 gap-2">
+              {[
+                { name: 'systemBlue', hex: '#007AFF', dark: '#0A84FF' },
+                { name: 'systemIndigo', hex: '#5856D6', dark: '#5E5CE6' },
+                { name: 'systemPurple', hex: '#AF52DE', dark: '#BF5AF2' },
+                { name: 'systemPink', hex: '#FF2D55', dark: '#FF375F' },
+                { name: 'systemRed', hex: '#FF3B30', dark: '#FF453A' },
+                { name: 'systemOrange', hex: '#FF9500', dark: '#FF9F0A' },
+                { name: 'systemYellow', hex: '#FFCC00', dark: '#FFD60A' },
+                { name: 'systemGreen', hex: '#34C759', dark: '#30D158' },
+                { name: 'systemTeal', hex: '#30B0C7', dark: '#40C8E0' },
+                { name: 'systemCyan', hex: '#32ADE6', dark: '#64D2FF' },
+                { name: 'systemMint', hex: '#00C7BE', dark: '#63E6E2' },
+              ].map((col) => {
+                const activeHex = mode === 'dark' ? col.dark : col.hex;
+                return (
+                  <button
+                    key={col.name}
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(activeHex);
+                      addToast(`Copied ${col.name}`, `${activeHex} copied to clipboard`, 'success');
+                    }}
+                    className="p-2 rounded-xl glass-interactive flex flex-col items-start gap-1.5 hover:-translate-y-0.5 transition-transform cursor-pointer text-left"
+                  >
+                    <div
+                      className="w-full h-7 rounded-lg border border-white/25 shadow-xs"
+                      style={{ backgroundColor: activeHex }}
+                    />
+                    <span className="text-[10px] font-semibold text-[var(--text-primary)] truncate w-full">
+                      {col.name.replace('system', '')}
+                    </span>
+                    <span className="text-[9px] font-mono-tabular text-[var(--text-muted)]">
+                      {activeHex}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </CardContent>
       </Card>
