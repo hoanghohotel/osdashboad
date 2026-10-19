@@ -75,7 +75,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header ref={barRef} className="sticky top-0 z-30 px-3 sm:px-6 pt-3 pb-2">
       <div className="glass-primary rounded-2xl px-3.5 sm:px-5 h-14 flex items-center justify-between gap-3 sm:gap-6">
         {/* Left Zone: Mobile Drawer Trigger + macOS Window Dots + Brand + Workspace Selector */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 shrink">
           <Button
             variant="secondary"
             size="icon"
@@ -134,7 +134,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               variant="secondary"
               size="sm"
               onClick={() => setOpenMenu(openMenu === 'workspace' ? null : 'workspace')}
-              className="max-w-[170px] sm:max-w-[210px]"
+              className="max-w-[110px] sm:max-w-[160px]"
             >
               <span className="truncate">{activeWorkspace.name}</span>
               <FaIcon icon="fa-solid fa-chevron-down" className="text-[10px] text-[var(--text-muted)] shrink-0" />
@@ -184,7 +184,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
 
         {/* Center Zone: Global Spotlight Search Trigger (⌘K) */}
-        <div className="flex-1 max-w-md hidden md:block">
+        <div className="flex-1 min-w-0 max-w-md hidden 2xl:block">
           <button
             type="button"
             onClick={onOpenCommandPalette}
@@ -208,7 +208,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             size="icon"
             onClick={onOpenCommandPalette}
             aria-label="Search and commands"
-            className="md:hidden"
+            className="2xl:hidden"
           >
             <FaIcon icon="fa-solid fa-magnifying-glass" />
           </Button>

@@ -516,8 +516,8 @@ const DashboardWorkspace: React.FC = () => {
                 {/* Page Breadcrumb & Welcome / Section Header */}
                 <Card glassVariant="secondary">
                   <CardContent>
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                      <div className="space-y-1.5 max-w-2xl">
+                    <div className="flex flex-col gap-5">
+                      <div className="space-y-1.5 max-w-3xl min-w-0">
                         <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
                           <button
                             type="button"
@@ -557,7 +557,7 @@ const DashboardWorkspace: React.FC = () => {
                       </div>
 
                       {/* Date-Range Selector & Primary Contextual Actions */}
-                      <div className="flex flex-wrap items-center gap-2 shrink-0">
+                      <div className="flex flex-wrap items-center gap-2 min-w-0">
                         <div className="liquid-pill-group overflow-x-auto">
                           {(['today', '7d', '30d', '90d', '12m'] as DateRangeKey[]).map((rk) => {
                             const active = dateRange === rk;
