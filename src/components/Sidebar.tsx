@@ -208,7 +208,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
        * Stretches to the full height of the device screen without premature vertical shrinking */}
       <aside
         aria-label="Sidebar Navigation"
-        className={`hidden lg:flex sticky top-[88px] h-[calc(100dvh-112px)] flex-col self-start shrink-0 transition-[width] duration-200 ${
+        className={`dashboard-sidebar hidden lg:flex sticky top-[88px] h-[calc(100dvh-112px)] flex-col self-start shrink-0 transition-[width] duration-200 ${
           collapsed ? 'w-[76px]' : 'w-[248px]'
         }`}
       >
@@ -219,13 +219,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Mobile Glass Drawer (iPhone / Compact Viewports) */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
+        <div className="sidebar-drawer-layer fixed inset-0 z-50 flex lg:hidden">
           <div
             className="fixed inset-0 bg-black/45 backdrop-blur-xs transition-opacity"
             onClick={onCloseMobile}
             aria-hidden="true"
           />
-          <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Sidebar Navigation" className="relative z-10 w-72 max-w-[88vw] h-[100dvh] glass-floating p-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col">
+          <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Sidebar Navigation" className="sidebar-drawer relative z-10 w-72 max-w-[88vw] h-[100dvh] glass-floating p-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col">
             {renderSidebarContent(true)}
           </aside>
         </div>

@@ -778,7 +778,7 @@ html.dark .liquid-dock-icon::before {
  * ========================================================================== */
 
 /* 1. MACBOOK PRO 16" (1440 × 900) - Force full desktop layout on any screen */
-.device-viewport-macbook aside[aria-label="Sidebar Navigation"] {
+.device-viewport-macbook .dashboard-sidebar {
   display: flex !important;
 }
 .device-viewport-macbook div.hidden.md\:block {
@@ -820,7 +820,7 @@ html.dark .liquid-dock-icon::before {
 }
 
 /* 2. IPAD PRO 13" LANDSCAPE (1180 × 820) - Force tablet-landscape layout */
-.device-viewport-ipad-landscape aside[aria-label="Sidebar Navigation"] {
+.device-viewport-ipad-landscape .dashboard-sidebar {
   display: flex !important;
 }
 .device-viewport-ipad-landscape div.hidden.md\:block {
@@ -856,7 +856,7 @@ html.dark .liquid-dock-icon::before {
 }
 
 /* 3. IPAD PRO 13" PORTRAIT (820 × 1180) - Keep Sidebar visible in full height */
-.device-viewport-ipad-portrait aside[aria-label="Sidebar Navigation"] {
+.device-viewport-ipad-portrait .dashboard-sidebar {
   display: flex !important;
 }
 .device-viewport-ipad-portrait .hidden.xl\:inline,
@@ -908,7 +908,7 @@ html.dark .liquid-dock-icon::before {
   flex-direction: column !important;
   align-items: stretch !important;
 }
-.device-viewport-iphone aside[aria-label="Sidebar Navigation"],
+.device-viewport-iphone .dashboard-sidebar,
 .device-viewport-iphone div.hidden.md\:block,
 .device-viewport-iphone .hidden.sm\:inline,
 .device-viewport-iphone .hidden.xl\:inline,
@@ -926,7 +926,7 @@ html.dark .liquid-dock-icon::before {
 }
 
 /* 5. IPHONE 16 PRO MAX LANDSCAPE (932 × 430) - Force mobile-landscape layout */
-.device-viewport-iphone-landscape aside[aria-label="Sidebar Navigation"],
+.device-viewport-iphone-landscape .dashboard-sidebar,
 .device-viewport-iphone-landscape .hidden.xl\:inline,
 .device-viewport-iphone-landscape .hidden.xl\:flex,
 .device-viewport-iphone-landscape .hidden.lg\:inline-flex {
@@ -1001,3 +1001,27 @@ html.dark {
   .workspace-content button { min-height: 40px; }
   .workspace-content .demo-notice { font-size: 11px; }
 }
+
+/* Device previews use their logical screen dimensions, not the host viewport. */
+.device-viewport-macbook { --sidebar-screen-height: 900px; }
+.device-viewport-ipad-landscape { --sidebar-screen-height: 820px; }
+.device-viewport-ipad-portrait { --sidebar-screen-height: 1180px; }
+.device-viewport-iphone { --sidebar-screen-height: 932px; }
+.device-viewport-iphone-landscape { --sidebar-screen-height: 430px; }
+[class*="device-viewport-"] .dashboard-sidebar {
+  height: calc(var(--sidebar-screen-height) - 200px);
+  top: 80px;
+}
+[class*="device-viewport-"] .sidebar-drawer-layer {
+  display: flex !important;
+}
+[class*="device-viewport-"] .sidebar-drawer {
+  display: flex !important;
+  height: 100%;
+  max-height: 100%;
+}
+/* Portrait tablet needs the same navigation drawer as its 820px screen. */
+.device-viewport-ipad-portrait .dashboard-sidebar { display: none !important; }
+.device-viewport-ipad-portrait button.lg\:hidden { display: inline-flex !important; }
+.device-viewport-macbook .dashboard-sidebar { width: 248px; }
+.device-viewport-macbook .dashboard-sidebar.w-\[76px\] { width: 76px; }
