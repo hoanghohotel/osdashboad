@@ -3,6 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
 import { DeviceMode, DeviceOrientation, NavSectionId } from '../types/dashboard';
+import { LiquidBackground } from './LiquidBackground';
 import { Badge, Button, FaIcon } from './ui/liquid-shadcn';
 
 /* ============================================================================
@@ -1188,6 +1189,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     backgroundColor: mode === 'dark' ? '#080b12' : '#f2f4f8',
                   }}
                 >
+                  <LiquidBackground embedded />
                   {/* macOS Tahoe Internal Status Menu Bar */}
                   <div className="h-7 px-4 bg-black/35 backdrop-blur-xl text-white/90 text-[11px] font-medium flex items-center justify-between shrink-0 z-30 border-b border-white/10">
                     <div className="flex items-center gap-4">
@@ -1306,6 +1308,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     backgroundColor: mode === 'dark' ? '#080b12' : '#f2f4f8',
                   }}
                 >
+                  <LiquidBackground embedded />
                   {/* iPadOS Status Bar */}
                   <div className="h-7 px-5 bg-black/25 backdrop-blur-md text-[var(--text-primary)] text-[11px] font-semibold flex items-center justify-between shrink-0 z-30 border-b border-[var(--glass-border)]">
                     <div className="flex items-center gap-2 font-mono-tabular">
@@ -1411,6 +1414,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     backgroundColor: mode === 'dark' ? '#080b12' : '#f2f4f8',
                   }}
                 >
+                  <LiquidBackground embedded />
                   {/* iOS Status Bar + Interactive Dynamic Island */}
                   <div className="pt-2.5 pb-1.5 px-6 flex items-center justify-between shrink-0 z-30 relative">
                     <button

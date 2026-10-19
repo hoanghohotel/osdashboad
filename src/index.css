@@ -778,8 +778,8 @@ html.dark .liquid-dock-icon::before {
  * ========================================================================== */
 
 /* 1. MACBOOK PRO 16" (1440 × 900) - Force full desktop layout on any screen */
-.device-viewport-macbook aside.hidden.lg\:block {
-  display: block !important;
+.device-viewport-macbook aside[aria-label="Sidebar Navigation"] {
+  display: flex !important;
 }
 .device-viewport-macbook div.hidden.md\:block {
   display: block !important;
@@ -820,8 +820,8 @@ html.dark .liquid-dock-icon::before {
 }
 
 /* 2. IPAD PRO 13" LANDSCAPE (1180 × 820) - Force tablet-landscape layout */
-.device-viewport-ipad-landscape aside.hidden.lg\:block {
-  display: block !important;
+.device-viewport-ipad-landscape aside[aria-label="Sidebar Navigation"] {
+  display: flex !important;
 }
 .device-viewport-ipad-landscape div.hidden.md\:block {
   display: block !important;
@@ -855,22 +855,22 @@ html.dark .liquid-dock-icon::before {
   align-items: center !important;
 }
 
-/* 3. IPAD PRO 13" PORTRAIT (820 × 1180) - Force tablet-portrait layout */
-.device-viewport-ipad-portrait aside.hidden.lg\:block,
+/* 3. IPAD PRO 13" PORTRAIT (820 × 1180) - Keep Sidebar visible in full height */
+.device-viewport-ipad-portrait aside[aria-label="Sidebar Navigation"] {
+  display: flex !important;
+}
 .device-viewport-ipad-portrait .hidden.xl\:inline,
 .device-viewport-ipad-portrait .hidden.xl\:flex,
 .device-viewport-ipad-portrait .hidden.lg\:inline-flex {
   display: none !important;
 }
-.device-viewport-ipad-portrait button.lg\:hidden {
-  display: inline-flex !important;
-}
-.device-viewport-ipad-portrait div.hidden.md\:block {
-  display: block !important;
-}
+.device-viewport-ipad-portrait button.lg\:hidden,
 .device-viewport-ipad-portrait button.md\:hidden,
 .device-viewport-ipad-portrait div.md\:hidden {
   display: none !important;
+}
+.device-viewport-ipad-portrait div.hidden.md\:block {
+  display: block !important;
 }
 .device-viewport-ipad-portrait .hidden.sm\:inline {
   display: inline !important;
@@ -908,7 +908,7 @@ html.dark .liquid-dock-icon::before {
   flex-direction: column !important;
   align-items: stretch !important;
 }
-.device-viewport-iphone aside.hidden.lg\:block,
+.device-viewport-iphone aside[aria-label="Sidebar Navigation"],
 .device-viewport-iphone div.hidden.md\:block,
 .device-viewport-iphone .hidden.sm\:inline,
 .device-viewport-iphone .hidden.xl\:inline,
@@ -926,7 +926,7 @@ html.dark .liquid-dock-icon::before {
 }
 
 /* 5. IPHONE 16 PRO MAX LANDSCAPE (932 × 430) - Force mobile-landscape layout */
-.device-viewport-iphone-landscape aside.hidden.lg\:block,
+.device-viewport-iphone-landscape aside[aria-label="Sidebar Navigation"],
 .device-viewport-iphone-landscape .hidden.xl\:inline,
 .device-viewport-iphone-landscape .hidden.xl\:flex,
 .device-viewport-iphone-landscape .hidden.lg\:inline-flex {

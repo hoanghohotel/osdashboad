@@ -31,6 +31,7 @@ import {
 import { ACCENT_SWATCHES, useTheme } from '../context/ThemeContext';
 import { LANGUAGE_OPTIONS, useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
+import { WALLPAPER_PRESETS, WallpaperPreset } from '../data/wallpapers';
 import {
   AnalyticsPoint,
   Customer,
@@ -578,14 +579,416 @@ export const IntegrationsModuleView: React.FC<{
   );
 };
 
-/* 7. Settings Module View (macOS System Settings Aesthetic) */
+/* 7. Settings Module View (macOS System Settings & 10-Wallpaper Studio Aesthetic) */
 export const SettingsModuleView: React.FC = () => {
-  const { mode, setMode, accent, setAccent, highRefraction, setHighRefraction } = useTheme();
+  const {
+    mode,
+    setMode,
+    accent,
+    setAccent,
+    highRefraction,
+    setHighRefraction,
+    wallpaperId,
+    activeWallpaper,
+    customWallpaperUrl,
+    wallpaperBlur,
+    wallpaperDim,
+    setWallpaperId,
+    setCustomWallpaperUrl,
+    setWallpaperBlur,
+    setWallpaperDim,
+    cycleNextWallpaper,
+  } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { addToast } = useToast();
 
+  const [wallpaperCategory, setWallpaperCategory] = useState<
+    'all' | WallpaperPreset['category']
+  >('all');
+  const [customUrlInput, setCustomUrlInput] = useState(customWallpaperUrl || '');
+
+  const filteredWallpapers = WALLPAPER_PRESETS.filter(
+    (wp) => wallpaperCategory === 'all' || wp.category === wallpaperCategory
+  );
+
+  const handleSelectWallpaper = (wp: WallpaperPreset) => {
+    setWallpaperId(wp.id);
+    addToast(
+      language === 'vi'
+        ? `Đã đổi hình nền: ${wp.name.vi}`
+        : language === 'zh'
+        ? `已切换壁纸：${wp.name.zh}`
+        : `Wallpaper applied: ${wp.name.en}`,
+      wp.subtitle[language],
+      'info'
+    );
+  };
+
+  const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setCustomWallpaperUrl(reader.result);
+        setCustomUrlInput('');
+        addToast(
+          language === 'vi' ? 'Đã tải ảnh nền tùy chỉnh' : 'Custom Background Uploaded',
+          file.name,
+          'info'
+        );
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-5xl space-y-6">
+      {/* Card 1: 10 Designed Wallpapers & Background Studio */}
+      <Card glassVariant="secondary">
+        <CardHeader className="border-b border-[var(--glass-border)] pb-4 flex-col sm:flex-row sm:items-center justify-between gap-4 space-y-0">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <FaIcon icon="fa-solid fa-image" className="text-[var(--accent-primary)]" />
+              <span>
+                {language === 'vi'
+                  ? 'Bộ Sưu Tập 10 Hình Nền Thiết Kế (macOS & iOS 26 Wallpaper Studio)'
+                  : language === 'zh'
+                  ? 'macOS 与 iOS 26 专属 10 款精制背景壁纸工作室'
+                  : 'macOS & iOS 26 Designed Wallpaper Studio (10 Artworks)'}
+              </span>
+            </CardTitle>
+            <CardDescription className="mt-1">
+              {language === 'vi'
+                ? 'Chọn 1 trong 10 ảnh nền nghệ thuật độ phân giải cao để khúc xạ xuyên qua lớp kính Liquid Glass trên toàn bộ thiết bị'
+                : language === 'zh'
+                ? '从 10 款高分辨率艺术背景中选择，实时折射于全设备液态玻璃界面'
+                : 'Select from 10 custom-designed artworks engineered for optical Liquid Glass refraction across all devices'}
+            </CardDescription>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                cycleNextWallpaper();
+                addToast(
+                  language === 'vi'
+                    ? 'Đã chuyển sang hình nền kế tiếp'
+                    : language === 'zh'
+                    ? '已切换下一张壁纸'
+                    : 'Switched to next wallpaper',
+                  undefined,
+                  'info'
+                );
+              }}
+            >
+              <FaIcon icon="fa-solid fa-wand-magic-sparkles" />
+              <span>
+                {language === 'vi'
+                  ? 'Đổi hình nền tiếp theo'
+                  : language === 'zh'
+                  ? '切换下一张壁纸'
+                  : 'Next Wallpaper'}
+              </span>
+            </Button>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pt-5 space-y-6">
+          {/* Active Wallpaper Live Preview Showcase Banner */}
+          <div className="relative rounded-2xl overflow-hidden border border-[var(--glass-border-strong)] h-44 sm:h-52 flex items-end p-5 select-none">
+            <img
+              src={customWallpaperUrl.trim() || activeWallpaper.svgDataUri}
+              alt={activeWallpaper.name[language]}
+              referrerPolicy="no-referrer"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+            <div className="relative z-10 w-full flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div className="space-y-1 text-white">
+                <div className="flex items-center gap-2 text-[11px] font-mono-tabular text-sky-300">
+                  <FaIcon icon="fa-solid fa-circle-check" />
+                  <span>
+                    {customWallpaperUrl.trim()
+                      ? 'Custom User Wallpaper'
+                      : `${activeWallpaper.badge} · ${activeWallpaper.resolution}`}
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-bold tracking-tight">
+                  {customWallpaperUrl.trim()
+                    ? language === 'vi'
+                      ? 'Ảnh Nền Tùy Chỉnh'
+                      : 'Custom Background Image'
+                    : activeWallpaper.name[language]}
+                </h3>
+                <p className="text-xs text-white/80 max-w-xl">
+                  {customWallpaperUrl.trim()
+                    ? language === 'vi'
+                      ? 'Đang sử dụng hình nền tải lên hoặc liên kết tùy chỉnh của bạn'
+                      : 'Currently displaying your custom uploaded or linked background'
+                    : activeWallpaper.subtitle[language]}
+                </p>
+              </div>
+
+              {/* Optical Wallpaper Blur & Dimming Controls */}
+              <div className="glass-floating rounded-2xl px-4 py-2.5 flex flex-wrap items-center gap-4 shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold text-[var(--text-primary)]">
+                    {language === 'vi' ? 'Độ mờ nền:' : 'Blur:'}
+                  </span>
+                  {([0, 4, 12] as const).map((bVal) => (
+                    <button
+                      key={bVal}
+                      type="button"
+                      onClick={() => setWallpaperBlur(bVal)}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-mono-tabular font-semibold cursor-pointer ${
+                        wallpaperBlur === bVal
+                          ? 'liquid-btn-primary text-white'
+                          : 'liquid-btn-ghost text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      {bVal}px
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-semibold text-[var(--text-primary)]">
+                    {language === 'vi' ? 'Độ dịu:' : 'Dim:'}
+                  </span>
+                  {([18, 32, 48] as const).map((dVal) => (
+                    <button
+                      key={dVal}
+                      type="button"
+                      onClick={() => setWallpaperDim(dVal)}
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-mono-tabular font-semibold cursor-pointer ${
+                        wallpaperDim === dVal
+                          ? 'liquid-btn-primary text-white'
+                          : 'liquid-btn-ghost text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      {dVal}%
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Category Filter Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="liquid-pill-group overflow-x-auto">
+              {(
+                [
+                  {
+                    id: 'all',
+                    label:
+                      language === 'vi'
+                        ? 'Tất cả 10 ảnh nền'
+                        : language === 'zh'
+                        ? '全部 10 款壁纸'
+                        : 'All 10 Wallpapers',
+                  },
+                  {
+                    id: 'dynamic',
+                    label:
+                      language === 'vi'
+                        ? 'Dải Lụa Động (Dynamic)'
+                        : language === 'zh'
+                        ? '动态流光'
+                        : 'Dynamic Flow',
+                  },
+                  {
+                    id: 'landscape',
+                    label:
+                      language === 'vi'
+                        ? 'Phong Cảnh macOS'
+                        : language === 'zh'
+                        ? 'macOS 自然风光'
+                        : 'macOS Landscapes',
+                  },
+                  {
+                    id: 'prism',
+                    label:
+                      language === 'vi'
+                        ? 'Lăng Kính Quang Học'
+                        : language === 'zh'
+                        ? '光学棱镜'
+                        : 'Optical Prism',
+                  },
+                  {
+                    id: 'abstract',
+                    label:
+                      language === 'vi'
+                        ? 'Điêu Khắc 3D'
+                        : language === 'zh'
+                        ? '3D 雕塑艺术'
+                        : '3D Abstract',
+                  },
+                ] as const
+              ).map((cat) => {
+                const active = wallpaperCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setWallpaperCategory(cat.id)}
+                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
+                      active
+                        ? 'liquid-btn-primary text-white'
+                        : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <span className="text-xs font-mono-tabular text-[var(--text-muted)]">
+              {filteredWallpapers.length} / 10 Artworks
+            </span>
+          </div>
+
+          {/* 10 Custom-Designed Background Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {filteredWallpapers.map((wp) => {
+              const indexNum = WALLPAPER_PRESETS.findIndex((item) => item.id === wp.id) + 1;
+              const isSelected = !customWallpaperUrl.trim() && wallpaperId === wp.id;
+              return (
+                <button
+                  key={wp.id}
+                  type="button"
+                  onClick={() => handleSelectWallpaper(wp)}
+                  className={`group text-left rounded-2xl overflow-hidden border transition-all duration-200 flex flex-col justify-between cursor-pointer ${
+                    isSelected
+                      ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-primary)]/40 -translate-y-0.5 shadow-lg'
+                      : 'border-[var(--glass-border)] hover:border-[var(--glass-border-strong)] hover:-translate-y-1'
+                  }`}
+                >
+                  {/* 16:9 Wallpaper Artwork Preview */}
+                  <div className="relative aspect-video w-full overflow-hidden bg-slate-950">
+                    <img
+                      src={wp.svgDataUri}
+                      alt={wp.name[language]}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/25" />
+
+                    {/* Top Index Number & Active Checkmark */}
+                    <div className="absolute top-2 inset-x-2.5 flex items-center justify-between text-[10px] font-mono-tabular text-white/90">
+                      <span className="px-1.5 py-0.5 rounded-md bg-black/45 backdrop-blur-md">
+                        #{String(indexNum).padStart(2, '0')}
+                      </span>
+                      {isSelected && (
+                        <span className="w-5 h-5 rounded-full bg-[var(--accent-primary)] text-white flex items-center justify-center shadow-sm">
+                          <FaIcon icon="fa-solid fa-check" className="text-[10px]" />
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Bottom Badge inside Thumbnail */}
+                    <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-[10px] text-white/85 font-medium truncate">
+                      <span className="truncate">{wp.badge}</span>
+                    </div>
+                  </div>
+
+                  {/* Wallpaper Title & Subtitle */}
+                  <div className="p-3 bg-[var(--glass-secondary-bg)] flex-1 flex flex-col justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-[var(--text-primary)] truncate">
+                        {wp.name[language]}
+                      </p>
+                      <p className="text-[11px] text-[var(--text-muted)] line-clamp-2 mt-0.5 leading-snug">
+                        {wp.subtitle[language]}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Optional Custom Wallpaper Upload or Image URL Bar */}
+          <div className="pt-4 border-t border-[var(--glass-border)] flex flex-col md:flex-row md:items-end justify-between gap-3">
+            <div className="flex-1 space-y-1.5">
+              <Label>
+                {language === 'vi'
+                  ? 'Hoặc tải ảnh nền riêng / dán đường dẫn ảnh (Custom Wallpaper)'
+                  : language === 'zh'
+                  ? '或上传自定义图片 / 粘贴壁纸链接'
+                  : 'Or Upload / Paste Custom Background Image URL'}
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="url"
+                  value={customUrlInput}
+                  onChange={(e) => setCustomUrlInput(e.target.value)}
+                  leftFaIcon="fa-solid fa-link"
+                  placeholder="https://example.com/wallpaper.jpg"
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    if (!customUrlInput.trim()) return;
+                    setCustomWallpaperUrl(customUrlInput.trim());
+                    addToast(
+                      language === 'vi' ? 'Đã áp dụng URL hình nền' : 'Custom Wallpaper URL Applied'
+                    );
+                  }}
+                >
+                  <span>{language === 'vi' ? 'Áp dụng' : 'Apply URL'}</span>
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <label className="liquid-btn px-3.5 py-2 rounded-full text-xs font-semibold text-[var(--text-primary)] inline-flex items-center gap-2 cursor-pointer">
+                <FaIcon icon="fa-solid fa-upload" className="text-[var(--accent-primary)]" />
+                <span>
+                  {language === 'vi'
+                    ? 'Tải ảnh từ máy'
+                    : language === 'zh'
+                    ? '上传本地图片'
+                    : 'Upload Image'}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadFile}
+                  className="hidden"
+                />
+              </label>
+
+              {customWallpaperUrl.trim() && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => {
+                    setCustomWallpaperUrl('');
+                    setCustomUrlInput('');
+                    addToast(
+                      language === 'vi'
+                        ? 'Đã khôi phục bộ 10 hình nền mặc định'
+                        : 'Restored preset wallpaper'
+                    );
+                  }}
+                >
+                  <FaIcon icon="fa-solid fa-rotate-left" />
+                  <span>{language === 'vi' ? 'Khôi phục' : 'Reset'}</span>
+                </Button>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Card 2: Light/Dark Glass Posture & 6 System Accent Colors */}
       <Card glassVariant="secondary">
         <CardHeader className="border-b border-[var(--glass-border)] pb-4">
           <CardTitle>macOS Liquid Glass Appearance & System Accent</CardTitle>
@@ -729,3 +1132,4 @@ export const SettingsModuleView: React.FC = () => {
     </div>
   );
 };
+

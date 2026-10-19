@@ -1,15 +1,56 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-export const LiquidBackground: React.FC = () => {
-  const { mode } = useTheme();
+interface LiquidBackgroundProps {
+  contained?: boolean;
+  embedded?: boolean;
+}
+
+export const LiquidBackground: React.FC<LiquidBackgroundProps> = ({
+  contained = false,
+  embedded = false,
+}) => {
+  const { mode, activeWallpaper, customWallpaperUrl, wallpaperBlur, wallpaperDim } = useTheme();
+
+  const isInsideDevice = contained || embedded;
+  const imageSrc = customWallpaperUrl.trim() || activeWallpaper.svgDataUri;
+  const baseCanvas = mode === 'dark' ? activeWallpaper.darkCanvas : activeWallpaper.lightCanvas;
 
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 -z-10 overflow-hidden pointer-events-none select-none"
-      style={{ backgroundColor: 'var(--bg-canvas)' }}
+      className={`${
+        isInsideDevice ? 'absolute inset-0 z-0' : 'fixed inset-0 -z-10'
+      } overflow-hidden pointer-events-none select-none transition-colors duration-500`}
+      style={{ backgroundColor: baseCanvas }}
     >
+      {/* Selected High-Resolution Wallpaper Artwork Layer */}
+      <img
+        key={imageSrc}
+        src={imageSrc}
+        alt={activeWallpaper.name.en}
+        referrerPolicy="no-referrer"
+        className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+        style={{
+          filter: `${wallpaperBlur > 0 ? `blur(${wallpaperBlur}px) ` : ''}${
+            mode === 'light' ? 'brightness(1.06) saturate(1.05)' : 'brightness(0.95) saturate(1.12)'
+          }`,
+          transform: wallpaperBlur > 0 ? 'scale(1.06)' : 'scale(1.01)',
+          opacity: mode === 'dark' ? 0.88 : 0.42,
+        }}
+      />
+
+      {/* Adaptive Light / Dark Contrast Scrim Overlay */}
+      <div
+        className="absolute inset-0 transition-opacity duration-300"
+        style={{
+          background:
+            mode === 'dark'
+              ? `rgba(4, 7, 15, ${Math.min(0.82, Math.max(0.08, wallpaperDim / 100))})`
+              : `rgba(244, 247, 252, ${Math.min(0.88, Math.max(0.25, (100 - wallpaperDim) / 130))})`,
+        }}
+      />
+
       {/* Subtle Ambient Mesh Base */}
       <div
         className="absolute inset-0 transition-opacity duration-500"
@@ -23,7 +64,7 @@ export const LiquidBackground: React.FC = () => {
 
       {/* 3D Refracting Glass Orb 1 - Top Left */}
       <div
-        className="absolute -top-24 -left-16 w-[440px] h-[440px] rounded-full opacity-75"
+        className="absolute -top-24 -left-16 w-[440px] h-[440px] rounded-full opacity-70"
         style={{
           background:
             mode === 'dark'
@@ -35,7 +76,7 @@ export const LiquidBackground: React.FC = () => {
 
       {/* 3D Refracting Glass Sphere 2 - Top Right */}
       <div
-        className="absolute top-[12%] right-[6%] w-[360px] h-[360px] rounded-full opacity-70"
+        className="absolute top-[12%] right-[6%] w-[360px] h-[360px] rounded-full opacity-65"
         style={{
           background:
             mode === 'dark'
@@ -58,13 +99,13 @@ export const LiquidBackground: React.FC = () => {
               ? 'inset 0 1px 2px rgba(255,255,255,0.12)'
               : 'inset 0 2px 4px rgba(255,255,255,0.8)',
           filter: 'blur(2px)',
-          opacity: 0.45,
+          opacity: 0.4,
         }}
       />
 
       {/* Fine Architectural Grid Overlay for Desktop Depth */}
       <div
-        className="absolute inset-0 opacity-[0.025] dark:opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.025]"
         style={{
           backgroundImage:
             'linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)',

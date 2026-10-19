@@ -68,8 +68,8 @@ const DashboardWorkspace: React.FC = () => {
   const { t, language } = useLanguage();
   const { addToast } = useToast();
 
-  // Authentication & Lock Screen State
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  // Authentication & Lock Screen State (starts at LoginScreen after macos-web BootupScreen)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<AuthenticatedUser>({
     name: 'Minh Nguyen',
     email: 'minh.nguyen@auraos.io',

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ACCENT_SWATCHES, useTheme } from '../context/ThemeContext';
 import { LANGUAGE_OPTIONS, useLanguage } from '../context/LanguageContext';
 import { useToast } from '../context/ToastContext';
+import { WALLPAPER_PRESETS } from '../data/wallpapers';
 import { ActivityEvent, DeviceMode, NavSectionId, WorkspaceOption } from '../types/dashboard';
 import { ControlCenterPopover } from './ControlCenterPopover';
 import { AuthenticatedUser } from './LoginScreen';
@@ -40,7 +41,16 @@ export const TopBar: React.FC<TopBarProps> = ({
   deviceMode = 'full',
   onSelectDeviceMode,
 }) => {
-  const { mode, toggleMode, accent, setAccent } = useTheme();
+  const {
+    mode,
+    toggleMode,
+    accent,
+    setAccent,
+    wallpaperId,
+    activeWallpaper,
+    customWallpaperUrl,
+    setWallpaperId,
+  } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { addToast } = useToast();
 
@@ -292,7 +302,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             </Button>
 
             {openMenu === 'appearance' && (
-              <div className="glass-floating absolute right-0 mt-2 w-72 rounded-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
+              <div className="glass-floating absolute right-0 mt-2 w-80 rounded-2xl p-4 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold text-[var(--text-primary)]">
@@ -328,6 +338,60 @@ export const TopBar: React.FC<TopBarProps> = ({
                           }}
                         >
                           {active && <FaIcon icon="fa-solid fa-check" className="text-[10px] text-white" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Quick 10-Wallpaper Selector Grid */}
+                <div className="border-t border-[var(--glass-border)] pt-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-[var(--text-primary)] flex items-center gap-1.5">
+                      <FaIcon icon="fa-solid fa-image" className="text-xs text-[var(--accent-primary)]" />
+                      <span>
+                        {language === 'vi'
+                          ? '10 Hình Nền'
+                          : language === 'zh'
+                          ? '10 款壁纸'
+                          : '10 Wallpapers'}
+                      </span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onNavigate('settings');
+                        setOpenMenu(null);
+                      }}
+                      className="text-[11px] font-medium text-[var(--accent-primary)] hover:underline cursor-pointer"
+                    >
+                      {activeWallpaper.name[language].slice(0, 16)} →
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {WALLPAPER_PRESETS.map((wp) => {
+                      const isCurrent = !customWallpaperUrl && wallpaperId === wp.id;
+                      return (
+                        <button
+                          key={wp.id}
+                          type="button"
+                          onClick={() => {
+                            setWallpaperId(wp.id);
+                            addToast(wp.name[language], wp.badge, 'info');
+                          }}
+                          title={wp.name[language]}
+                          className={`relative aspect-video rounded-lg overflow-hidden border transition-all cursor-pointer ${
+                            isCurrent
+                              ? 'border-[var(--accent-primary)] ring-2 ring-[var(--accent-primary)]/50 scale-105'
+                              : 'border-[var(--glass-border)] opacity-80 hover:opacity-100'
+                          }`}
+                        >
+                          <img
+                            src={wp.svgDataUri}
+                            alt={wp.name[language]}
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover"
+                          />
                         </button>
                       );
                     })}

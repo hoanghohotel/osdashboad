@@ -77,8 +77,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const isCompact = collapsed && !isMobileDrawer;
 
     return (
-      <div className="flex flex-col h-full justify-between">
-        <div className="space-y-5 overflow-y-auto pr-0.5">
+      <div className="flex flex-col flex-1 h-full justify-between">
+        <div className="space-y-4">
           {isMobileDrawer && (
             <div className="flex items-center justify-between px-2 pb-2 border-b border-[var(--glass-border)]">
               <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
@@ -117,7 +117,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       }}
                       title={isCompact ? item.label : undefined}
                       className={`w-full flex items-center cursor-pointer ${
-                        isCompact ? 'justify-center px-2 py-2.5' : 'justify-between px-3.5 py-2'
+                        isCompact ? 'justify-center px-2 py-2' : 'justify-between px-3.5 py-2'
                       } rounded-full text-xs font-semibold transition-all duration-200 ${
                         isActive
                           ? 'liquid-btn-primary text-white'
@@ -153,8 +153,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </div>
 
-        {/* Bottom Collapse / Expand Control */}
-        <div className="pt-3 border-t border-[var(--glass-border)] mt-3">
+        {/* Bottom Collapse / Expand Control — Pinned at the bottom of the full-height sidebar */}
+        <div className="pt-3 border-t border-[var(--glass-border)] mt-4 shrink-0">
           {!isMobileDrawer && (
             <Button
               variant="secondary"
@@ -176,19 +176,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* Desktop Floating Glass Sidebar */}
+      {/* Desktop & Tablet Full-Height Glass Sidebar
+       * Stretches to the full height of the device screen without premature vertical shrinking */}
       <aside
         aria-label="Sidebar Navigation"
-        className={`hidden lg:block shrink-0 transition-all duration-200 ${
-          collapsed ? 'w-[76px]' : 'w-[254px]'
+        className={`hidden md:flex flex-col self-stretch shrink-0 transition-all duration-200 ${
+          collapsed ? 'w-[76px]' : 'w-[248px]'
         }`}
       >
-        <div className="sticky top-[74px] h-[calc(100vh-90px)] glass-primary rounded-2xl p-3">
+        <div className="flex-1 h-full min-h-full glass-primary rounded-2xl p-3 flex flex-col justify-between">
           {renderSidebarContent(false)}
         </div>
       </aside>
 
-      {/* Mobile & Tablet Glass Drawer */}
+      {/* Mobile Glass Drawer (iPhone / Compact Viewports) */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex">
           <div
@@ -196,7 +197,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={onCloseMobile}
             aria-hidden="true"
           />
-          <aside className="relative z-10 w-72 max-w-[82vw] h-full glass-floating p-4">
+          <aside className="relative z-10 w-72 max-w-[82vw] h-full glass-floating p-4 overflow-y-auto flex flex-col">
             {renderSidebarContent(true)}
           </aside>
         </div>
