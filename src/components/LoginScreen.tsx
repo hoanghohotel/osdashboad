@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { LANGUAGE_OPTIONS, useLanguage } from '../context/LanguageContext';
-import { ControlCenterPopover } from './ControlCenterPopover';
+import { useLanguage } from '../context/LanguageContext';
 import { Avatar, Button, Checkbox, FaIcon, Input, Label } from './ui/liquid-shadcn';
 
 export interface AuthenticatedUser {
@@ -46,8 +45,8 @@ const DEMO_OPERATORS: AuthenticatedUser[] = [
 ];
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
-  const { mode, toggleMode } = useTheme();
-  const { language, setLanguage, t } = useLanguage();
+  const { mode } = useTheme();
+  const { t } = useLanguage();
 
   const [selectedOperator, setSelectedOperator] = useState<AuthenticatedUser>(DEMO_OPERATORS[0]);
   const [authTab, setAuthTab] = useState<'sso' | 'credentials'>('sso');
@@ -56,18 +55,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
   const [rememberDevice, setRememberDevice] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [authProviderLoading, setAuthProviderLoading] = useState<OAuthProviderId | null>(null);
-  const [controlCenterOpen, setControlCenterOpen] = useState(false);
-  const ccRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleOutside = (e: MouseEvent) => {
-      if (ccRef.current && !ccRef.current.contains(e.target as Node)) {
-        setControlCenterOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
-  }, []);
 
   const triggerSignIn = (user: AuthenticatedUser, provider: OAuthProviderId = 'apple') => {
     setErrorMsg('');
@@ -127,7 +114,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
 
   return (
     <div
-      className="relative flex-1 min-h-[720px] w-full flex flex-col justify-between overflow-hidden select-none"
+      className="relative flex-1 min-h-screen w-full flex items-center justify-center overflow-hidden select-none"
       style={{
         backgroundColor: mode === 'dark' ? '#05030a' : '#eef2f9',
       }}
@@ -230,73 +217,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
         </svg>
       </div>
 
-      {/* Top macOS Desktop Menu Bar */}
-      <header className="relative z-30 h-9 px-4 sm:px-6 flex items-center justify-between text-xs font-medium backdrop-blur-xl bg-black/20 dark:bg-black/35 text-slate-900 dark:text-white/90 border-b border-white/15">
-        <div className="flex items-center gap-5">
-          <span className="font-bold tracking-tight flex items-center gap-1.5">
-            <FaIcon icon="fa-solid fa-layer-group" className="text-[var(--accent-primary)]" />
-            <span>{t.app.brand}</span>
-          </span>
-          <span className="hidden sm:inline opacity-75">Workspace</span>
-          <span className="hidden sm:inline opacity-75">Security</span>
-          <span className="hidden md:inline opacity-75">Window</span>
-          <span className="hidden md:inline opacity-75">{t.app.helpCenter}</span>
-        </div>
-
-        <div className="flex items-center gap-3 relative" ref={ccRef}>
-          <div className="flex items-center gap-1 bg-white/15 dark:bg-white/10 px-1.5 py-0.5 rounded-md">
-            {LANGUAGE_OPTIONS.map((opt) => (
-              <button
-                key={opt.code}
-                type="button"
-                onClick={() => setLanguage(opt.code)}
-                className={`px-1.5 py-0.2 rounded text-[10px] font-mono-tabular font-semibold transition-colors cursor-pointer ${
-                  language === opt.code
-                    ? 'bg-white text-slate-900 shadow-2xs'
-                    : 'opacity-70 hover:opacity-100'
-                }`}
-              >
-                {opt.short}
-              </button>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={toggleMode}
-            title={mode === 'dark' ? t.app.themeLight : t.app.themeDark}
-            className="p-1 rounded-md hover:bg-white/15 transition-colors cursor-pointer"
-          >
-            <FaIcon icon={mode === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'} />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setControlCenterOpen((v) => !v)}
-            title={t.app.controlCenter}
-            className={`px-2 py-0.5 rounded-md flex items-center gap-1.5 transition-colors cursor-pointer ${
-              controlCenterOpen ? 'bg-white/25' : 'hover:bg-white/15'
-            }`}
-          >
-            <FaIcon icon="fa-solid fa-sliders" />
-            <span className="hidden sm:inline text-[11px]">{t.app.controlCenter}</span>
-          </button>
-
-          <FaIcon icon="fa-solid fa-wifi" className="opacity-80 hidden sm:inline" />
-          <span className="font-mono-tabular text-[11px] opacity-90">Sun 14:48</span>
-
-          {controlCenterOpen && (
-            <div className="absolute right-0 top-9 z-50">
-              <ControlCenterPopover />
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* Center Refractive Liquid Glass Authentication Card */}
-      <main className="relative z-20 flex-1 flex items-center justify-center p-4 sm:p-6">
+      {/* Center Refractive Liquid Glass Authentication Card (Full Screen — No Header, No Dock) */}
+      <main className="relative z-20 w-full flex items-center justify-center p-4 sm:p-6">
         <div
-          className="w-full max-w-[464px] rounded-[34px] p-6 sm:p-8 transition-all duration-300 relative overflow-hidden"
+          className="w-full max-w-[450px] rounded-[34px] p-6 sm:p-8 transition-all duration-300 relative overflow-hidden"
           style={{
             background:
               mode === 'dark'
@@ -509,12 +433,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                 <FaIcon icon="fa-solid fa-arrow-right" className="text-[11px] text-[var(--text-muted)]" />
               </button>
 
-              {/* Operator Selector Strip */}
-              <div className="pt-3 border-t border-[var(--glass-border)]">
-                <p className="text-[11px] font-medium text-[var(--text-muted)] mb-2 text-center">
+              {/* Operator Selector Strip — Avatar Icons Only */}
+              <div className="pt-3.5 border-t border-[var(--glass-border)]">
+                <p className="text-[11px] font-medium text-[var(--text-muted)] mb-2.5 text-center">
                   {t.login.switchAccount}
                 </p>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="flex items-center justify-center gap-4">
                   {DEMO_OPERATORS.map((op) => {
                     const active = selectedOperator.email === op.email;
                     return (
@@ -525,29 +449,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
                           setSelectedOperator(op);
                           setEmail(op.email);
                         }}
-                        className={`p-2 rounded-2xl text-center transition-all cursor-pointer ${
+                        title={`${op.name} · ${op.role}`}
+                        aria-label={`${op.name} · ${op.role}`}
+                        className={`relative p-1 rounded-full transition-all duration-200 cursor-pointer ${
                           active
-                            ? 'liquid-btn-primary text-white'
-                            : 'liquid-btn opacity-85 hover:opacity-100'
+                            ? 'ring-2 ring-[var(--accent-primary)] scale-110 shadow-[0_0_20px_var(--accent-glow)]'
+                            : 'opacity-60 hover:opacity-100 hover:scale-105'
                         }`}
                       >
-                        <div className="flex justify-center mb-1">
-                          <Avatar initials={op.initials} size="sm" />
-                        </div>
-                        <p
-                          className={`text-[11px] font-semibold truncate ${
-                            active ? 'text-white' : 'text-[var(--text-primary)]'
-                          }`}
-                        >
-                          {op.name.split(' ')[0]}
-                        </p>
-                        <p
-                          className={`text-[9px] truncate ${
-                            active ? 'text-white/80' : 'text-[var(--text-muted)]'
-                          }`}
-                        >
-                          {op.role}
-                        </p>
+                        <Avatar initials={op.initials} size="md" />
                       </button>
                     );
                   })}
@@ -631,46 +541,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
           </div>
         </div>
       </main>
-
-      {/* Bottom macOS Floating Glass Dock */}
-      <footer className="relative z-20 pb-4 px-4 flex justify-center">
-        <div
-          className="px-4 py-2 rounded-2xl flex items-center gap-3"
-          style={{
-            background:
-              mode === 'dark' ? 'rgba(24, 24, 34, 0.55)' : 'rgba(255, 255, 255, 0.65)',
-            backdropFilter: 'blur(24px) saturate(190%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(190%)',
-            boxShadow:
-              mode === 'dark'
-                ? 'inset 0 1px 1px rgba(255,255,255,0.22), 0 12px 32px rgba(0,0,0,0.5)'
-                : 'inset 0 1.5px 2px rgba(255,255,255,0.9), 0 12px 28px rgba(15,23,42,0.12)',
-            border:
-              mode === 'dark'
-                ? '1px solid rgba(255,255,255,0.14)'
-                : '1px solid rgba(255,255,255,0.75)',
-          }}
-        >
-          {DEMO_OPERATORS.map((op) => (
-            <button
-              key={op.email}
-              type="button"
-              onClick={() => triggerSignIn(op, 'passkey')}
-              className="group flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-white/15 transition-all cursor-pointer"
-              title={`${t.login.quickUnlockAs}: ${op.name}`}
-            >
-              <Avatar
-                initials={op.initials}
-                size="sm"
-                className="transition-transform group-hover:-translate-y-0.5"
-              />
-              <span className="text-xs font-medium text-[var(--text-primary)] hidden sm:inline">
-                {op.name}
-              </span>
-            </button>
-          ))}
-        </div>
-      </footer>
     </div>
   );
 };

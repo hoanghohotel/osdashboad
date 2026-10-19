@@ -372,6 +372,27 @@ const DashboardWorkspace: React.FC = () => {
     (o) => o.status === 'pending' || o.status === 'processing'
   ).length;
 
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen w-full flex flex-col selection:bg-[var(--accent-primary)] selection:text-white">
+        <LiquidBackground />
+        <LoginScreen
+          onSuccessLogin={(user) => {
+            setCurrentUser(user);
+            setIsAuthenticated(true);
+            if (deviceMode !== 'full') {
+              setIsHomeScreenOpen(true);
+            }
+            addToast(
+              `Welcome back, ${user.name}`,
+              `Signed in as ${user.role} · ${activeWorkspace.name}`
+            );
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col selection:bg-[var(--accent-primary)] selection:text-white">
       <LiquidBackground />
@@ -385,18 +406,13 @@ const DashboardWorkspace: React.FC = () => {
           setDeviceOrientation((o) => (o === 'portrait' ? 'landscape' : 'portrait'))
         }
         isHomeScreenOpen={isHomeScreenOpen}
-        onToggleHomeScreen={
-          isAuthenticated ? () => setIsHomeScreenOpen((prev) => !prev) : undefined
-        }
+        onToggleHomeScreen={() => setIsHomeScreenOpen((prev) => !prev)}
         bottomDock={
           <DeviceInternalDock
             deviceMode={deviceMode}
             activeSection={activeSection}
             isHomeScreenOpen={isHomeScreenOpen}
             onSelectSection={(sec) => {
-              if (!isAuthenticated) {
-                setIsAuthenticated(true);
-              }
               setActiveSection(sec);
               setIsHomeScreenOpen(false);
             }}
@@ -411,34 +427,13 @@ const DashboardWorkspace: React.FC = () => {
             lowStockCount={lowStockCount}
             isAuthenticated={isAuthenticated}
             onToggleLock={() => {
-              setIsAuthenticated((prev) => {
-                const next = !prev;
-                addToast(
-                  next ? `Welcome back, ${currentUser.name}` : t.app.signOut,
-                  next ? 'Workspace unlocked.' : 'Switched to Lock / Login Screen.',
-                  'info'
-                );
-                return next;
-              });
+              setIsAuthenticated(false);
+              addToast(t.app.signOut, 'Switched to Lock / Login Screen.', 'info');
             }}
           />
         }
       >
-        {!isAuthenticated ? (
-          <LoginScreen
-            onSuccessLogin={(user) => {
-              setCurrentUser(user);
-              setIsAuthenticated(true);
-              if (deviceMode !== 'full') {
-                setIsHomeScreenOpen(true);
-              }
-              addToast(
-                `Welcome back, ${user.name}`,
-                `Signed in as ${user.role} · ${activeWorkspace.name}`
-              );
-            }}
-          />
-        ) : isHomeScreenOpen ? (
+        {isHomeScreenOpen ? (
           /* Device OS Home Screen (SpringBoard / iPadOS Home / macOS Launchpad)
            * Every Sidebar item is rendered as an interactive Liquid Glass App Icon */
           <DeviceHomeScreen
