@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { NavSectionId } from '../types/dashboard';
 import { Button, FaIcon } from './ui/liquid-shadcn';
@@ -25,6 +25,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
   lowStockCount,
 }) => {
   const { t } = useLanguage();
+  const drawerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const drawer = drawerRef.current;
+    const focusable = () => Array.from(drawer?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? []);
+    focusable()[0]?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); onCloseMobile(); }
+      if (event.key !== 'Tab') return;
+      const items = focusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKey);
+      previousFocus?.focus();
+    };
+  }, [mobileOpen, onCloseMobile]);
 
   const navGroups: {
     label: string;
@@ -77,8 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const isCompact = collapsed && !isMobileDrawer;
 
     return (
-      <div className="flex flex-col flex-1 h-full justify-between">
-        <div className="space-y-4">
+      <div className="flex flex-col flex-1 min-h-0">
+        <nav aria-label={t.app.workspace} className="space-y-5 flex-1 min-h-0 overflow-y-auto overscroll-contain sidebar-scroll">
           {isMobileDrawer && (
             <div className="flex items-center justify-between px-2 pb-2 border-b border-[var(--glass-border)]">
               <span className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
@@ -116,19 +142,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         if (isMobileDrawer) onCloseMobile();
                       }}
                       title={isCompact ? item.label : undefined}
-                      className={`w-full flex items-center cursor-pointer ${
-                        isCompact ? 'justify-center px-2 py-2' : 'justify-between px-3.5 py-2'
-                      } rounded-full text-xs font-semibold transition-all duration-200 ${
+                      aria-label={item.label}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`sidebar-link w-full min-h-11 flex items-center gap-2 cursor-pointer ${
+                        isCompact ? 'justify-center px-2 py-2.5' : 'justify-between px-3 py-2.5'
+                      } rounded-xl text-[13px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)] ${
                         isActive
-                          ? 'liquid-btn-primary text-white'
-                          : 'liquid-btn-ghost text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                          ? 'bg-[var(--accent-soft)] text-[var(--accent-primary)]'
+                          : 'text-[var(--text-secondary)] hover:bg-[var(--glass-subtle-bg)] hover:text-[var(--text-primary)]'
                       }`}
                     >
                       <span className="flex items-center gap-2.5 min-w-0">
                         <FaIcon
                           icon={item.faIcon}
                           className={`text-sm shrink-0 ${
-                            isActive ? 'text-white' : 'text-[var(--text-muted)]'
+                            isActive ? 'text-[var(--accent-primary)]' : 'text-[var(--text-muted)]'
                           }`}
                         />
                         {!isCompact && <span className="truncate">{item.label}</span>}
@@ -138,7 +166,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-mono-tabular font-bold shrink-0 ${
                             isActive
-                              ? 'bg-white/25 text-white border border-white/30'
+                              ? 'bg-[var(--accent-soft)] text-[var(--accent-primary)] border border-[var(--accent-border)]'
                               : 'bg-[var(--glass-subtle-bg)] text-[var(--text-secondary)] border border-[var(--glass-border)]'
                           }`}
                         >
@@ -151,7 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
           ))}
-        </div>
+        </nav>
 
         {/* Bottom Collapse / Expand Control — Pinned at the bottom of the full-height sidebar */}
         <div className="pt-3 border-t border-[var(--glass-border)] mt-4 shrink-0">
@@ -180,24 +208,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
        * Stretches to the full height of the device screen without premature vertical shrinking */}
       <aside
         aria-label="Sidebar Navigation"
-        className={`hidden md:flex flex-col self-stretch shrink-0 transition-all duration-200 ${
+        className={`hidden lg:flex sticky top-[88px] h-[calc(100dvh-112px)] flex-col self-start shrink-0 transition-[width] duration-200 ${
           collapsed ? 'w-[76px]' : 'w-[248px]'
         }`}
       >
-        <div className="flex-1 h-full min-h-full glass-primary rounded-2xl p-3 flex flex-col justify-between">
+        <div className="flex-1 min-h-0 glass-primary rounded-2xl p-3 flex flex-col">
           {renderSidebarContent(false)}
         </div>
       </aside>
 
       {/* Mobile Glass Drawer (iPhone / Compact Viewports) */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 flex lg:hidden">
           <div
             className="fixed inset-0 bg-black/45 backdrop-blur-xs transition-opacity"
             onClick={onCloseMobile}
             aria-hidden="true"
           />
-          <aside className="relative z-10 w-72 max-w-[82vw] h-full glass-floating p-4 overflow-y-auto flex flex-col">
+          <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Sidebar Navigation" className="relative z-10 w-72 max-w-[88vw] h-[100dvh] glass-floating p-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col">
             {renderSidebarContent(true)}
           </aside>
         </div>
