@@ -386,101 +386,107 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSuccessLogin }) => {
             </p>
           </div>
 
-          {/* 5 Primary Stylized Liquid Glass OAuth Buttons: Apple, Google, Facebook, X, GitHub */}
-          <div className="space-y-2.5 relative z-10">
-            {/* Row 1: Primary Full-Width Apple & Google Liquid Glass Capsules */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {/* Apple OAuth Button */}
-              <button
-                type="button"
-                disabled={isAuthenticating}
-                onClick={() => triggerSignIn(selectedOperator, 'apple')}
-                style={getOAuthPillStyle('rgba(244, 63, 94, 0.16)', 'rgba(244, 63, 94, 0.12)')}
-                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
-              >
-                <FaIcon icon="fa-brands fa-apple" className="text-base shrink-0" />
-                <span className="truncate">
-                  {authProviderLoading === 'apple' ? 'Apple ID...' : t.login.signInWithApple}
-                </span>
-              </button>
+          {/* Stylized Liquid Glass OAuth Buttons: Apple + Icon-Only Facebook, Google, X, GitHub */}
+          <div className="space-y-3 relative z-10">
+            {/* Primary Full-Width Apple OAuth Liquid Glass Capsule */}
+            <button
+              type="button"
+              disabled={isAuthenticating}
+              onClick={() => triggerSignIn(selectedOperator, 'apple')}
+              style={getOAuthPillStyle('rgba(244, 63, 94, 0.16)', 'rgba(244, 63, 94, 0.12)')}
+              className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+            >
+              <FaIcon icon="fa-brands fa-apple" className="text-base shrink-0" />
+              <span className="truncate">
+                {authProviderLoading === 'apple' ? 'Apple ID...' : t.login.signInWithApple}
+              </span>
+            </button>
 
-              {/* Google OAuth Button */}
-              <button
-                type="button"
-                disabled={isAuthenticating}
-                onClick={() => triggerSignIn(selectedOperator, 'google')}
-                style={getOAuthPillStyle('rgba(56, 189, 248, 0.16)', 'rgba(56, 189, 248, 0.14)')}
-                className="liquid-btn-caustic w-full py-3 px-4 rounded-full flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.98] cursor-pointer whitespace-nowrap"
-              >
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="#4285F4"
-                    d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"
-                  />
-                  <path
-                    fill="#34A853"
-                    d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"
-                  />
-                  <path
-                    fill="#FBBC05"
-                    d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"
-                  />
-                  <path
-                    fill="#EA4335"
-                    d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"
-                  />
-                </svg>
-                <span className="truncate">
-                  {authProviderLoading === 'google' ? 'Google...' : t.login.signInWithGoogle}
-                </span>
-              </button>
-            </div>
-
-            {/* Row 2: Stylized Liquid Glass OAuth Buttons for Facebook, X, and GitHub */}
-            <div className="grid grid-cols-3 gap-2.5">
-              {/* Facebook OAuth Button */}
+            {/* Icon-Only Liquid Glass Row: Facebook, Google, X, GitHub (No text labels) */}
+            <div className="grid grid-cols-4 gap-2.5">
+              {/* Facebook Icon-Only OAuth Button */}
               <button
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'facebook')}
                 title={t.login.signInWithFacebook}
-                style={getOAuthPillStyle('rgba(59, 130, 246, 0.16)', 'rgba(59, 130, 246, 0.14)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                aria-label={t.login.signInWithFacebook}
+                style={getOAuthPillStyle('rgba(59, 130, 246, 0.18)', 'rgba(59, 130, 246, 0.14)')}
+                className="liquid-btn-caustic h-11 rounded-full flex items-center justify-center text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.04] active:scale-[0.96] cursor-pointer"
               >
-                <FaIcon icon="fa-brands fa-facebook" className="text-[#1877F2] text-sm shrink-0" />
-                <span className="truncate">
-                  {authProviderLoading === 'facebook' ? '...' : 'Facebook'}
-                </span>
+                {authProviderLoading === 'facebook' ? (
+                  <FaIcon icon="fa-solid fa-circle-notch" className="fa-spin text-sm" />
+                ) : (
+                  <FaIcon icon="fa-brands fa-facebook" className="text-[#1877F2] text-lg" />
+                )}
               </button>
 
-              {/* X (Twitter) OAuth Button */}
+              {/* Google Icon-Only OAuth Button */}
+              <button
+                type="button"
+                disabled={isAuthenticating}
+                onClick={() => triggerSignIn(selectedOperator, 'google')}
+                title={t.login.signInWithGoogle}
+                aria-label={t.login.signInWithGoogle}
+                style={getOAuthPillStyle('rgba(56, 189, 248, 0.18)', 'rgba(56, 189, 248, 0.14)')}
+                className="liquid-btn-caustic h-11 rounded-full flex items-center justify-center text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.04] active:scale-[0.96] cursor-pointer"
+              >
+                {authProviderLoading === 'google' ? (
+                  <FaIcon icon="fa-solid fa-circle-notch" className="fa-spin text-sm" />
+                ) : (
+                  <svg className="w-[18px] h-[18px]" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      fill="#4285F4"
+                      d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"
+                    />
+                    <path
+                      fill="#34A853"
+                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"
+                    />
+                    <path
+                      fill="#FBBC05"
+                      d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.98-3.09z"
+                    />
+                    <path
+                      fill="#EA4335"
+                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              {/* X (Twitter) Icon-Only OAuth Button */}
               <button
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'x')}
                 title={t.login.signInWithX}
-                style={getOAuthPillStyle('rgba(168, 85, 247, 0.15)', 'rgba(168, 85, 247, 0.12)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                aria-label={t.login.signInWithX}
+                style={getOAuthPillStyle('rgba(168, 85, 247, 0.16)', 'rgba(168, 85, 247, 0.12)')}
+                className="liquid-btn-caustic h-11 rounded-full flex items-center justify-center text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.04] active:scale-[0.96] cursor-pointer"
               >
-                <FaIcon icon="fa-brands fa-x-twitter" className="text-sm shrink-0" />
-                <span className="truncate">
-                  {authProviderLoading === 'x' ? '...' : 'X.com'}
-                </span>
+                {authProviderLoading === 'x' ? (
+                  <FaIcon icon="fa-solid fa-circle-notch" className="fa-spin text-sm" />
+                ) : (
+                  <FaIcon icon="fa-brands fa-x-twitter" className="text-[17px]" />
+                )}
               </button>
 
-              {/* GitHub OAuth Button */}
+              {/* GitHub Icon-Only OAuth Button */}
               <button
                 type="button"
                 disabled={isAuthenticating}
                 onClick={() => triggerSignIn(selectedOperator, 'github')}
                 title={t.login.signInWithGithub}
-                style={getOAuthPillStyle('rgba(99, 102, 241, 0.16)', 'rgba(99, 102, 241, 0.13)')}
-                className="liquid-btn-caustic py-2.5 px-3 rounded-full flex items-center justify-center gap-2 text-xs font-semibold text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.015] active:scale-[0.97] cursor-pointer whitespace-nowrap"
+                aria-label={t.login.signInWithGithub}
+                style={getOAuthPillStyle('rgba(99, 102, 241, 0.18)', 'rgba(99, 102, 241, 0.14)')}
+                className="liquid-btn-caustic h-11 rounded-full flex items-center justify-center text-[var(--text-primary)] transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.04] active:scale-[0.96] cursor-pointer"
               >
-                <FaIcon icon="fa-brands fa-github" className="text-sm shrink-0" />
-                <span className="truncate">
-                  {authProviderLoading === 'github' ? '...' : 'GitHub'}
-                </span>
+                {authProviderLoading === 'github' ? (
+                  <FaIcon icon="fa-solid fa-circle-notch" className="fa-spin text-sm" />
+                ) : (
+                  <FaIcon icon="fa-brands fa-github" className="text-lg" />
+                )}
               </button>
             </div>
           </div>

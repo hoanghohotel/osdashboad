@@ -6,17 +6,891 @@ import { DeviceMode, DeviceOrientation, NavSectionId } from '../types/dashboard'
 import { Badge, Button, FaIcon } from './ui/liquid-shadcn';
 
 /* ============================================================================
- * 1. Exact Fixed-Resolution Device Mockup Frame Wrapper
+ * 1. Unified Sidebar Application Icon Definitions (11 Sidebar Apps)
+ *    Used across Device Home Screen (SpringBoard / Launchpad) & Device Docks
+ * ========================================================================== */
+export interface SidebarAppDefinition {
+  id: NavSectionId;
+  faIcon: string;
+  dockTint: string;
+  dockGlow: string;
+  glyphColor: string;
+  group: 'workspace' | 'commerce' | 'system';
+}
+
+export const SIDEBAR_APP_DEFINITIONS: SidebarAppDefinition[] = [
+  {
+    id: 'overview',
+    faIcon: 'fa-solid fa-compass',
+    dockTint: 'rgba(56, 189, 248, 0.28)',
+    dockGlow: 'rgba(56, 189, 248, 0.38)',
+    glyphColor: '#38bdf8',
+    group: 'workspace',
+  },
+  {
+    id: 'analytics',
+    faIcon: 'fa-solid fa-chart-pie',
+    dockTint: 'rgba(192, 132, 252, 0.28)',
+    dockGlow: 'rgba(192, 132, 252, 0.38)',
+    glyphColor: '#c084fc',
+    group: 'workspace',
+  },
+  {
+    id: 'reports',
+    faIcon: 'fa-solid fa-file-invoice-dollar',
+    dockTint: 'rgba(34, 211, 238, 0.28)',
+    dockGlow: 'rgba(34, 211, 238, 0.38)',
+    glyphColor: '#22d3ee',
+    group: 'workspace',
+  },
+  {
+    id: 'orders',
+    faIcon: 'fa-solid fa-bag-shopping',
+    dockTint: 'rgba(52, 211, 153, 0.28)',
+    dockGlow: 'rgba(52, 211, 153, 0.38)',
+    glyphColor: '#34d399',
+    group: 'commerce',
+  },
+  {
+    id: 'products',
+    faIcon: 'fa-solid fa-cubes-stacked',
+    dockTint: 'rgba(251, 191, 36, 0.28)',
+    dockGlow: 'rgba(251, 191, 36, 0.38)',
+    glyphColor: '#fbbf24',
+    group: 'commerce',
+  },
+  {
+    id: 'customers',
+    faIcon: 'fa-solid fa-user-astronaut',
+    dockTint: 'rgba(251, 113, 133, 0.28)',
+    dockGlow: 'rgba(251, 113, 133, 0.38)',
+    glyphColor: '#fb7185',
+    group: 'commerce',
+  },
+  {
+    id: 'inventory',
+    faIcon: 'fa-solid fa-boxes-stacked',
+    dockTint: 'rgba(251, 146, 60, 0.28)',
+    dockGlow: 'rgba(251, 146, 60, 0.38)',
+    glyphColor: '#fb923c',
+    group: 'commerce',
+  },
+  {
+    id: 'development',
+    faIcon: 'fa-solid fa-wand-magic-sparkles',
+    dockTint: 'rgba(129, 140, 248, 0.3)',
+    dockGlow: 'rgba(129, 140, 248, 0.4)',
+    glyphColor: '#818cf8',
+    group: 'system',
+  },
+  {
+    id: 'team',
+    faIcon: 'fa-solid fa-shield-halved',
+    dockTint: 'rgba(45, 212, 191, 0.28)',
+    dockGlow: 'rgba(45, 212, 191, 0.38)',
+    glyphColor: '#2dd4bf',
+    group: 'system',
+  },
+  {
+    id: 'integrations',
+    faIcon: 'fa-solid fa-plug',
+    dockTint: 'rgba(167, 139, 250, 0.28)',
+    dockGlow: 'rgba(167, 139, 250, 0.38)',
+    glyphColor: '#a78bfa',
+    group: 'system',
+  },
+  {
+    id: 'settings',
+    faIcon: 'fa-solid fa-sliders',
+    dockTint: 'rgba(148, 163, 184, 0.26)',
+    dockGlow: 'rgba(148, 163, 184, 0.34)',
+    glyphColor: '#94a3b8',
+    group: 'system',
+  },
+];
+
+/* ============================================================================
+ * 2. Device OS Home Screen (SpringBoard / iPadOS / macOS Launchpad)
+ *    Displays all Sidebar sections as interactive iOS 26 / macOS Tahoe
+ *    Refractive Liquid Glass App Icons + Live OS Widgets.
+ * ========================================================================== */
+interface DeviceHomeScreenProps {
+  deviceMode: DeviceMode;
+  activeSection: NavSectionId;
+  onOpenApp: (section: NavSectionId) => void;
+  onOpenCommandPalette: () => void;
+  onOpenQuickCreate: () => void;
+  ordersCount: number;
+  lowStockCount: number;
+  totalRevenueFormatted: string;
+  conversionRate: number;
+  userName: string;
+  workspaceName: string;
+}
+
+export const DeviceHomeScreen: React.FC<DeviceHomeScreenProps> = ({
+  deviceMode,
+  activeSection,
+  onOpenApp,
+  onOpenCommandPalette,
+  onOpenQuickCreate,
+  ordersCount,
+  lowStockCount,
+  totalRevenueFormatted,
+  conversionRate,
+  userName,
+  workspaceName,
+}) => {
+  const { t } = useLanguage();
+  const isIPhone = deviceMode === 'iphone';
+  const isIPad = deviceMode === 'ipad';
+
+  const getBadgeCount = (id: NavSectionId): number | undefined => {
+    if (id === 'orders' && ordersCount > 0) return ordersCount;
+    if (id === 'inventory' && lowStockCount > 0) return lowStockCount;
+    return undefined;
+  };
+
+  return (
+    <div
+      className={`flex-1 flex flex-col justify-between select-none ${
+        isIPhone
+          ? 'px-5 pt-3 pb-2'
+          : isIPad
+          ? 'px-10 pt-6 pb-4'
+          : 'px-8 sm:px-14 pt-8 pb-8 max-w-[1280px] w-full mx-auto'
+      }`}
+    >
+      {/* Top Section: OS Widgets + Sidebar App Icon Grid */}
+      <div className={isIPhone ? 'space-y-5' : 'space-y-7'}>
+        {/* Top OS Liquid Glass Widgets Row */}
+        <div
+          className={`grid gap-3.5 ${
+            isIPhone ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+          }`}
+        >
+          {/* Widget 1: Live Revenue Pulse Widget */}
+          <button
+            type="button"
+            onClick={() => onOpenApp('overview')}
+            className="glass-primary rounded-[26px] p-4 text-left transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
+                <FaIcon icon="fa-solid fa-compass" />
+                <span className="truncate">{workspaceName}</span>
+              </span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+            <p
+              className={`font-bold font-mono-tabular tracking-tight text-[var(--text-primary)] ${
+                isIPhone ? 'text-lg' : 'text-2xl'
+              }`}
+            >
+              {totalRevenueFormatted}
+            </p>
+            <div className="flex items-center justify-between mt-1.5 text-[11px]">
+              <span className="text-emerald-500 font-semibold">+18.4%</span>
+              <span className="text-[var(--text-muted)] text-[10px]">
+                {t.nav.overview} →
+              </span>
+            </div>
+          </button>
+
+          {/* Widget 2: Orders & Fulfillment Live Widget */}
+          <button
+            type="button"
+            onClick={() => onOpenApp('orders')}
+            className="glass-primary rounded-[26px] p-4 text-left transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                <FaIcon icon="fa-solid fa-bag-shopping" />
+                <span>{t.nav.orders}</span>
+              </span>
+              <Badge variant="success">{ordersCount} Active</Badge>
+            </div>
+            <p
+              className={`font-bold font-mono-tabular tracking-tight text-[var(--text-primary)] ${
+                isIPhone ? 'text-lg' : 'text-2xl'
+              }`}
+            >
+              {conversionRate}% CVR
+            </p>
+            <div className="flex items-center justify-between mt-1.5 text-[11px]">
+              <span className="text-[var(--text-secondary)] truncate">
+                {lowStockCount} SKU Alert
+              </span>
+              <span className="text-[var(--text-muted)] text-[10px]">Open →</span>
+            </div>
+          </button>
+
+          {/* Widget 3: Quick Spotlight & Operator Widget (Hidden on compact iPhone 2-col row) */}
+          {!isIPhone && (
+            <div className="glass-primary rounded-[26px] p-4 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1.5">
+                  <FaIcon icon="fa-solid fa-wand-magic-sparkles" />
+                  <span>AuraOS Spatial Home</span>
+                </span>
+                <span className="text-[11px] font-mono-tabular text-[var(--text-muted)]">
+                  {userName}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-3">
+                <button
+                  type="button"
+                  onClick={onOpenCommandPalette}
+                  className="liquid-btn flex-1 py-2 px-3 rounded-full text-xs font-semibold text-[var(--text-primary)] flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <FaIcon
+                    icon="fa-solid fa-magnifying-glass"
+                    className="text-[var(--accent-primary)]"
+                  />
+                  <span>Spotlight (⌘K)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onOpenQuickCreate}
+                  className="liquid-btn-primary py-2 px-3.5 rounded-full text-xs font-semibold text-white flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <FaIcon icon="fa-solid fa-plus" />
+                  <span>{t.welcome.newOrderBtn}</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* iPhone Search Pill above App Icons */}
+        {isIPhone && (
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            className="liquid-btn w-full py-2 px-4 rounded-full flex items-center justify-center gap-2 text-xs font-medium text-[var(--text-secondary)] cursor-pointer"
+          >
+            <FaIcon icon="fa-solid fa-magnifying-glass" className="text-[11px]" />
+            <span>Spotlight Search</span>
+          </button>
+        )}
+
+        {/* Main OS Application Icon Grid — Every Icon is a Sidebar Section */}
+        <div
+          className={`grid place-items-center ${
+            isIPhone
+              ? 'grid-cols-4 gap-x-3 gap-y-5 pt-1'
+              : isIPad
+              ? 'grid-cols-5 sm:grid-cols-6 gap-x-6 gap-y-7 pt-2'
+              : 'grid-cols-4 sm:grid-cols-6 gap-x-8 gap-y-8 pt-3'
+          }`}
+        >
+          {SIDEBAR_APP_DEFINITIONS.map((app) => {
+            const badge = getBadgeCount(app.id);
+            const isCurrent = activeSection === app.id;
+            return (
+              <button
+                key={app.id}
+                type="button"
+                onClick={() => onOpenApp(app.id)}
+                className="group flex flex-col items-center gap-1.5 focus:outline-none cursor-pointer w-full"
+              >
+                <div
+                  data-active={isCurrent}
+                  style={
+                    {
+                      '--dock-tint': app.dockTint,
+                      '--dock-glow': app.dockGlow,
+                    } as React.CSSProperties
+                  }
+                  className={`liquid-dock-icon flex items-center justify-center transition-all duration-200 group-hover:-translate-y-1.5 group-hover:scale-108 group-active:scale-95 ${
+                    isIPhone
+                      ? 'w-[58px] h-[58px] rounded-[16px]!'
+                      : isIPad
+                      ? 'w-[66px] h-[66px] rounded-[18px]!'
+                      : 'w-[70px] h-[70px] rounded-[20px]!'
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex items-center justify-center relative z-10"
+                    style={{
+                      color: app.glyphColor,
+                      filter: `drop-shadow(0 2px 8px ${app.dockGlow})`,
+                    }}
+                  >
+                    <FaIcon
+                      icon={app.faIcon}
+                      className={
+                        isIPhone ? 'text-[22px]' : isIPad ? 'text-[25px]' : 'text-[26px]'
+                      }
+                    />
+                  </span>
+
+                  {typeof badge === 'number' && badge > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 z-20 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-500/95 backdrop-blur-md text-white text-[10px] font-mono-tabular font-bold flex items-center justify-center border border-white/70 shadow-sm">
+                      {badge}
+                    </span>
+                  )}
+                </div>
+
+                <span
+                  className={`font-medium text-[var(--text-primary)] text-center leading-tight truncate max-w-[84px] ${
+                    isIPhone ? 'text-[11px]' : 'text-xs'
+                  }`}
+                >
+                  {t.nav[app.id]}
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Quick Create Action App Icon on Home Screen */}
+          <button
+            type="button"
+            onClick={onOpenQuickCreate}
+            className="group flex flex-col items-center gap-1.5 focus:outline-none cursor-pointer w-full"
+          >
+            <div
+              style={
+                {
+                  '--dock-tint': 'rgba(52, 211, 153, 0.3)',
+                  '--dock-glow': 'rgba(52, 211, 153, 0.4)',
+                } as React.CSSProperties
+              }
+              className={`liquid-dock-icon flex items-center justify-center transition-all duration-200 group-hover:-translate-y-1.5 group-hover:scale-108 group-active:scale-95 ${
+                isIPhone
+                  ? 'w-[58px] h-[58px] rounded-[16px]!'
+                  : isIPad
+                  ? 'w-[66px] h-[66px] rounded-[18px]!'
+                  : 'w-[70px] h-[70px] rounded-[20px]!'
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                className="flex items-center justify-center relative z-10 text-emerald-400"
+                style={{ filter: 'drop-shadow(0 2px 8px rgba(52, 211, 153, 0.4))' }}
+              >
+                <FaIcon
+                  icon="fa-solid fa-plus"
+                  className={isIPhone ? 'text-[22px]' : 'text-[25px]'}
+                />
+              </span>
+            </div>
+            <span
+              className={`font-medium text-[var(--text-primary)] text-center leading-tight truncate max-w-[84px] ${
+                isIPhone ? 'text-[11px]' : 'text-xs'
+              }`}
+            >
+              {t.welcome.newOrderBtn}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* SpringBoard Page Indicator Dots */}
+      <div className="flex items-center justify-center gap-2 pt-4 pb-1">
+        <span className="w-2 h-2 rounded-full bg-[var(--text-primary)] opacity-90" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-muted)] opacity-45" />
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================================
+ * 3. Internal Device Dock (<DeviceInternalDock />)
+ *    - iPhone ('iphone'): Strictly 4 icons pinned inside bottom of iPhone
+ *    - iPad   ('ipad')  : Strictly 13 icons pinned inside bottom of iPad
+ *    - MacBook / Full   : Full macOS Tahoe Dock with all Sidebar apps + tools
+ * ========================================================================== */
+export interface DeviceInternalDockProps {
+  deviceMode: DeviceMode;
+  activeSection: NavSectionId;
+  isHomeScreenOpen: boolean;
+  onSelectSection: (section: NavSectionId) => void;
+  onToggleHomeScreen: () => void;
+  onSelectDeviceMode: (mode: DeviceMode) => void;
+  onOpenCommandPalette: () => void;
+  onOpenQuickCreate: () => void;
+  ordersCount: number;
+  lowStockCount: number;
+  isAuthenticated: boolean;
+  onToggleLock: () => void;
+}
+
+export const DeviceInternalDock: React.FC<DeviceInternalDockProps> = ({
+  deviceMode,
+  activeSection,
+  isHomeScreenOpen,
+  onSelectSection,
+  onToggleHomeScreen,
+  onOpenCommandPalette,
+  onOpenQuickCreate,
+  ordersCount,
+  lowStockCount,
+  isAuthenticated,
+  onToggleLock,
+}) => {
+  const { mode, toggleMode } = useTheme();
+  const { t } = useLanguage();
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const [bouncingId, setBouncingId] = useState<string | null>(null);
+
+  const triggerBounce = (id: string) => {
+    setBouncingId(id);
+    setTimeout(() => setBouncingId(null), 420);
+  };
+
+  const getBadge = (id: NavSectionId): number | undefined => {
+    if (id === 'orders' && ordersCount > 0) return ordersCount;
+    if (id === 'inventory' && lowStockCount > 0) return lowStockCount;
+    return undefined;
+  };
+
+  // CASE A: iPHONE DOCK — Strictly 4 Icons Inside Bottom of iPhone Screen
+  if (deviceMode === 'iphone') {
+    const iphoneFourApps = SIDEBAR_APP_DEFINITIONS.filter((a) =>
+      ['overview', 'analytics', 'orders', 'settings'].includes(a.id)
+    );
+
+    return (
+      <div className="px-3.5 pt-1.5 pb-1 shrink-0 z-30 select-none">
+        <div
+          className="px-4 py-2.5 rounded-[30px] grid grid-cols-4 place-items-center gap-3"
+          style={{
+            background:
+              mode === 'dark'
+                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(15, 23, 42, 0.42) 100%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0.3) 100%)',
+            backdropFilter: 'blur(38px) saturate(210%)',
+            WebkitBackdropFilter: 'blur(38px) saturate(210%)',
+            boxShadow:
+              mode === 'dark'
+                ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 16px 34px -8px rgba(0, 0, 0, 0.65)'
+                : 'inset 0 1px 0 0 rgba(255, 255, 255, 0.85), 0 14px 30px -8px rgba(15, 23, 42, 0.14)',
+            border:
+              mode === 'dark'
+                ? '1px solid rgba(255, 255, 255, 0.15)'
+                : '1px solid rgba(255, 255, 255, 0.72)',
+          }}
+        >
+          {iphoneFourApps.map((app) => {
+            const isActive = !isHomeScreenOpen && activeSection === app.id;
+            const badge = getBadge(app.id);
+            return (
+              <button
+                key={app.id}
+                type="button"
+                data-active={isActive}
+                onClick={() => {
+                  triggerBounce(app.id);
+                  onSelectSection(app.id);
+                }}
+                title={t.nav[app.id]}
+                aria-label={t.nav[app.id]}
+                style={
+                  {
+                    '--dock-tint': app.dockTint,
+                    '--dock-glow': app.dockGlow,
+                  } as React.CSSProperties
+                }
+                className={`liquid-dock-icon w-[54px] h-[54px] rounded-[15px]! flex items-center justify-center cursor-pointer active:scale-92 ${
+                  bouncingId === app.id ? 'animate-bounce' : ''
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="flex items-center justify-center relative z-10"
+                  style={{
+                    color: app.glyphColor,
+                    filter: `drop-shadow(0 2px 6px ${app.dockGlow})`,
+                  }}
+                >
+                  <FaIcon icon={app.faIcon} className="text-[20px]" />
+                </span>
+
+                {typeof badge === 'number' && badge > 0 && (
+                  <span className="absolute -top-1 -right-1 z-20 min-w-[17px] h-[17px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white/70">
+                    {badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // CASE B: iPAD DOCK — Strictly 13 Icons Inside Bottom of iPad Screen
+  // (11 Sidebar App Icons + 1 App Library/Home Icon + 1 Spotlight Search Icon = 13 Icons)
+  if (deviceMode === 'ipad') {
+    return (
+      <div className="px-4 pt-1.5 pb-1 flex justify-center shrink-0 z-30 select-none">
+        <div
+          className="px-3.5 py-2 rounded-[26px] flex items-end gap-2 max-w-full overflow-x-auto no-scrollbar"
+          style={{
+            background:
+              mode === 'dark'
+                ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(15, 23, 42, 0.42) 100%)'
+                : 'linear-gradient(135deg, rgba(255, 255, 255, 0.56) 0%, rgba(255, 255, 255, 0.3) 100%)',
+            backdropFilter: 'blur(40px) saturate(210%)',
+            WebkitBackdropFilter: 'blur(40px) saturate(210%)',
+            boxShadow:
+              mode === 'dark'
+                ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 18px 36px -8px rgba(0, 0, 0, 0.68)'
+                : 'inset 0 1px 0 0 rgba(255, 255, 255, 0.85), 0 16px 34px -8px rgba(15, 23, 42, 0.16)',
+            border:
+              mode === 'dark'
+                ? '1px solid rgba(255, 255, 255, 0.15)'
+                : '1px solid rgba(255, 255, 255, 0.72)',
+          }}
+        >
+          {/* Icon #1: iPadOS Home Screen / App Library Launcher */}
+          <div className="relative flex flex-col items-center">
+            <button
+              type="button"
+              data-active={isHomeScreenOpen}
+              onClick={() => {
+                triggerBounce('home');
+                onToggleHomeScreen();
+              }}
+              title="Home Screen (All Apps)"
+              style={
+                {
+                  '--dock-tint': 'rgba(56, 189, 248, 0.3)',
+                  '--dock-glow': 'rgba(56, 189, 248, 0.4)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 flex items-center justify-center cursor-pointer shrink-0 hover:-translate-y-1.5 transition-all"
+            >
+              <FaIcon
+                icon="fa-solid fa-table-cells-large"
+                className="text-[16px] text-sky-400 relative z-10"
+              />
+            </button>
+            <span
+              className={`mt-1 w-1 h-1 rounded-full ${
+                isHomeScreenOpen ? 'bg-[var(--text-primary)] opacity-90' : 'opacity-0'
+              }`}
+            />
+          </div>
+
+          <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-0.5 mb-2 shrink-0" />
+
+          {/* Icons #2 to #12: All 11 Sidebar Application Icons */}
+          {SIDEBAR_APP_DEFINITIONS.map((app) => {
+            const isActive = !isHomeScreenOpen && activeSection === app.id;
+            const badge = getBadge(app.id);
+            return (
+              <div key={app.id} className="relative flex flex-col items-center">
+                <button
+                  type="button"
+                  data-active={isActive}
+                  onClick={() => {
+                    triggerBounce(app.id);
+                    onSelectSection(app.id);
+                  }}
+                  title={t.nav[app.id]}
+                  aria-label={t.nav[app.id]}
+                  style={
+                    {
+                      '--dock-tint': app.dockTint,
+                      '--dock-glow': app.dockGlow,
+                    } as React.CSSProperties
+                  }
+                  className={`liquid-dock-icon w-11 h-11 flex items-center justify-center cursor-pointer shrink-0 hover:-translate-y-1.5 transition-all ${
+                    bouncingId === app.id ? 'animate-bounce' : ''
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex items-center justify-center relative z-10"
+                    style={{
+                      color: app.glyphColor,
+                      filter: `drop-shadow(0 2px 6px ${app.dockGlow})`,
+                    }}
+                  >
+                    <FaIcon icon={app.faIcon} className="text-[16px]" />
+                  </span>
+
+                  {typeof badge === 'number' && badge > 0 && (
+                    <span className="absolute -top-1 -right-1 z-20 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white/70">
+                      {badge}
+                    </span>
+                  )}
+                </button>
+                <span
+                  className={`mt-1 w-1 h-1 rounded-full ${
+                    isActive ? 'bg-[var(--text-primary)] opacity-90' : 'opacity-0'
+                  }`}
+                />
+              </div>
+            );
+          })}
+
+          <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-0.5 mb-2 shrink-0" />
+
+          {/* Icon #13: Spotlight Search (⌘K) */}
+          <div className="relative flex flex-col items-center">
+            <button
+              type="button"
+              onClick={onOpenCommandPalette}
+              title="Spotlight Search (⌘K)"
+              style={
+                {
+                  '--dock-tint': 'rgba(192, 132, 252, 0.26)',
+                  '--dock-glow': 'rgba(192, 132, 252, 0.36)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 flex items-center justify-center cursor-pointer shrink-0 hover:-translate-y-1.5 transition-all"
+            >
+              <FaIcon
+                icon="fa-solid fa-magnifying-glass"
+                className="text-[15px] text-purple-400 relative z-10"
+              />
+            </button>
+            <span className="mt-1 w-1 h-1 opacity-0" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // CASE C: MACBOOK PRO / FULL DESKTOP DOCK
+  const getScaleClass = (idx: number) => {
+    if (hoveredIdx === null) return 'scale-100 translate-y-0';
+    const dist = Math.abs(hoveredIdx - idx);
+    if (dist === 0) return 'scale-[1.2] -translate-y-2';
+    if (dist === 1) return 'scale-[1.08] -translate-y-1';
+    return 'scale-100 translate-y-0';
+  };
+
+  return (
+    <div
+      className={`${
+        deviceMode === 'full'
+          ? 'fixed bottom-3 left-1/2 -translate-x-1/2 z-50 max-w-[96vw]'
+          : 'px-4 pt-1 pb-2 flex justify-center shrink-0 z-30'
+      } select-none`}
+    >
+      <div
+        className="px-3.5 py-2 rounded-[26px] flex items-end gap-2 overflow-x-auto no-scrollbar"
+        style={{
+          background:
+            mode === 'dark'
+              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.38) 100%)'
+              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.54) 0%, rgba(255, 255, 255, 0.28) 100%)',
+          backdropFilter: 'blur(40px) saturate(210%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(210%)',
+          boxShadow:
+            mode === 'dark'
+              ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 22px 46px -10px rgba(0, 0, 0, 0.7)'
+              : 'inset 0 1px 0 0 rgba(255, 255, 255, 0.85), 0 18px 42px -10px rgba(15, 23, 42, 0.16)',
+          border:
+            mode === 'dark'
+              ? '1px solid rgba(255, 255, 255, 0.14)'
+              : '1px solid rgba(255, 255, 255, 0.68)',
+        }}
+      >
+        {/* Launchpad / Home Screen Toggle Icon */}
+        {isAuthenticated && (
+          <>
+            <div className="relative flex flex-col items-center">
+              {hoveredLabel === 'launchpad' && (
+                <div className="hidden sm:block absolute -top-11 px-3 py-1 rounded-full glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none z-50">
+                  Launchpad (All Apps)
+                </div>
+              )}
+              <button
+                type="button"
+                data-active={isHomeScreenOpen}
+                onClick={() => {
+                  triggerBounce('launchpad');
+                  onToggleHomeScreen();
+                }}
+                onMouseEnter={() => {
+                  setHoveredIdx(-1);
+                  setHoveredLabel('launchpad');
+                }}
+                onMouseLeave={() => {
+                  setHoveredIdx(null);
+                  setHoveredLabel(null);
+                }}
+                style={
+                  {
+                    '--dock-tint': 'rgba(56, 189, 248, 0.3)',
+                    '--dock-glow': 'rgba(56, 189, 248, 0.4)',
+                  } as React.CSSProperties
+                }
+                className="liquid-dock-icon w-11 h-11 flex items-center justify-center cursor-pointer shrink-0 hover:-translate-y-1.5 transition-all"
+              >
+                <FaIcon
+                  icon="fa-solid fa-table-cells-large"
+                  className="text-[16px] text-sky-400 relative z-10"
+                />
+              </button>
+              <span
+                className={`mt-1 w-1 h-1 rounded-full ${
+                  isHomeScreenOpen ? 'bg-[var(--text-primary)] opacity-90' : 'opacity-0'
+                }`}
+              />
+            </div>
+
+            <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-0.5 mb-2 shrink-0" />
+          </>
+        )}
+
+        {/* All 11 Sidebar Application Icons */}
+        {SIDEBAR_APP_DEFINITIONS.map((app, idx) => {
+          const isActive = isAuthenticated && !isHomeScreenOpen && activeSection === app.id;
+          const badge = getBadge(app.id);
+          return (
+            <div key={app.id} className="relative flex flex-col items-center">
+              {hoveredLabel === app.id && (
+                <div className="hidden sm:block absolute -top-11 px-3 py-1 rounded-full glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none z-50">
+                  {t.nav[app.id]}
+                </div>
+              )}
+              <button
+                type="button"
+                data-active={isActive}
+                onClick={() => {
+                  triggerBounce(app.id);
+                  onSelectSection(app.id);
+                }}
+                onMouseEnter={() => {
+                  setHoveredIdx(idx);
+                  setHoveredLabel(app.id);
+                }}
+                onMouseLeave={() => {
+                  setHoveredIdx(null);
+                  setHoveredLabel(null);
+                }}
+                aria-label={t.nav[app.id]}
+                style={
+                  {
+                    '--dock-tint': app.dockTint,
+                    '--dock-glow': app.dockGlow,
+                  } as React.CSSProperties
+                }
+                className={`liquid-dock-icon w-11 h-11 flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
+                  idx
+                )} ${bouncingId === app.id ? 'animate-bounce' : ''}`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="flex items-center justify-center relative z-10"
+                  style={{
+                    color: app.glyphColor,
+                    filter: `drop-shadow(0 2px 6px ${app.dockGlow})`,
+                  }}
+                >
+                  <FaIcon icon={app.faIcon} className="text-[16px]" />
+                </span>
+
+                {typeof badge === 'number' && badge > 0 && (
+                  <span className="absolute -top-1 -right-1 z-20 min-w-[16px] h-[16px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white/70">
+                    {badge}
+                  </span>
+                )}
+              </button>
+              <span
+                className={`mt-1 w-1 h-1 rounded-full ${
+                  isActive ? 'bg-[var(--text-primary)] opacity-90' : 'opacity-0'
+                }`}
+              />
+            </div>
+          );
+        })}
+
+        <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-0.5 mb-2 shrink-0" />
+
+        {/* System Utilities: Spotlight, Quick Create, Theme, Lock */}
+        <div className="flex items-end gap-2">
+          <div className="relative flex flex-col items-center">
+            <button
+              type="button"
+              onClick={onOpenCommandPalette}
+              title="Spotlight Search (⌘K)"
+              style={
+                {
+                  '--dock-tint': 'rgba(56, 189, 248, 0.22)',
+                  '--dock-glow': 'rgba(56, 189, 248, 0.32)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 flex items-center justify-center hover:-translate-y-1.5 transition-all cursor-pointer"
+            >
+              <FaIcon
+                icon="fa-solid fa-magnifying-glass"
+                className="text-[15px] text-sky-400 relative z-10"
+              />
+            </button>
+            <span className="mt-1 w-1 h-1 opacity-0" />
+          </div>
+
+          <div className="relative flex flex-col items-center">
+            <button
+              type="button"
+              onClick={toggleMode}
+              title={mode === 'dark' ? t.app.themeLight : t.app.themeDark}
+              style={
+                {
+                  '--dock-tint': 'rgba(251, 191, 36, 0.24)',
+                  '--dock-glow': 'rgba(251, 191, 36, 0.34)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 flex items-center justify-center hover:-translate-y-1.5 transition-all cursor-pointer"
+            >
+              <FaIcon
+                icon={mode === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}
+                className="text-[15px] text-amber-400 relative z-10"
+              />
+            </button>
+            <span className="mt-1 w-1 h-1 opacity-0" />
+          </div>
+
+          <div className="relative flex flex-col items-center">
+            <button
+              type="button"
+              onClick={onToggleLock}
+              title={isAuthenticated ? 'Lock Screen' : 'Unlock'}
+              style={
+                {
+                  '--dock-tint': 'rgba(251, 113, 133, 0.24)',
+                  '--dock-glow': 'rgba(251, 113, 133, 0.34)',
+                } as React.CSSProperties
+              }
+              className="liquid-dock-icon w-11 h-11 flex items-center justify-center hover:-translate-y-1.5 transition-all cursor-pointer"
+            >
+              <FaIcon
+                icon={isAuthenticated ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open'}
+                className="text-[15px] text-rose-400 relative z-10"
+              />
+            </button>
+            <span className="mt-1 w-1 h-1 opacity-0" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ============================================================================
+ * 4. Exact Fixed-Resolution Device Mockup Frame Wrapper (<DeviceMockupFrame />)
  *    - MacBook Pro 16"   : 1440 × 900 px (Desktop Viewport Locked)
  *    - iPad Pro 13"      : 1180 × 820 px Landscape / 820 × 1180 px Portrait
  *    - iPhone 16 Pro Max : 430 × 932 px Portrait / 932 × 430 px Landscape
- *    Independent of viewer's physical browser window size.
+ *    Renders the Device Dock INSIDE the bottom of the device screen!
  * ========================================================================== */
 interface DeviceMockupFrameProps {
   deviceMode: DeviceMode;
   onSelectDeviceMode: (mode: DeviceMode) => void;
   orientation: DeviceOrientation;
   onToggleOrientation: () => void;
+  isHomeScreenOpen?: boolean;
+  onToggleHomeScreen?: () => void;
+  bottomDock?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -25,6 +899,9 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
   onSelectDeviceMode,
   orientation,
   onToggleOrientation,
+  isHomeScreenOpen = false,
+  onToggleHomeScreen,
+  bottomDock,
   children,
 }) => {
   const { mode } = useTheme();
@@ -35,13 +912,13 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
   const stageRef = useRef<HTMLDivElement>(null);
   const [stageSize, setStageSize] = useState<{ width: number; height: number }>({
     width: typeof window !== 'undefined' ? window.innerWidth - 32 : 1440,
-    height: typeof window !== 'undefined' ? window.innerHeight - 170 : 900,
+    height: typeof window !== 'undefined' ? window.innerHeight - 130 : 900,
   });
 
   useEffect(() => {
     const updateSize = () => {
       const w = stageRef.current?.clientWidth || window.innerWidth - 32;
-      const h = Math.max(480, window.innerHeight - 175);
+      const h = Math.max(500, window.innerHeight - 125);
       setStageSize({ width: w, height: h });
     };
     updateSize();
@@ -56,7 +933,12 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
 
   // Full Canvas Mode (Default Responsive Desktop)
   if (deviceMode === 'full') {
-    return <div className="min-h-screen flex flex-col pb-24">{children}</div>;
+    return (
+      <div className="min-h-screen flex flex-col pb-24">
+        {children}
+        {bottomDock}
+      </div>
+    );
   }
 
   // Exact Fixed Logical Pixel Resolutions for Each Hardware Device
@@ -85,7 +967,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
     },
     ipad: {
       name: 'iPad Pro 13"',
-      chip: 'Apple M4 · Ultra Retina XDR Tandem OLED',
+      chip: 'Apple M4 · Ultra Retina XDR · 13-Icon Dock',
       screenW: orientation === 'landscape' ? 1180 : 820,
       screenH: orientation === 'landscape' ? 820 : 1180,
       frameExtraW: 36,
@@ -98,7 +980,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
     },
     iphone: {
       name: 'iPhone 16 Pro Max',
-      chip: 'Apple A18 Pro · Grade 5 Titanium',
+      chip: 'Apple A18 Pro · Grade 5 Titanium · 4-Icon Dock',
       screenW: orientation === 'portrait' ? 430 : 932,
       screenH: orientation === 'portrait' ? 932 : 430,
       frameExtraW: 32,
@@ -123,20 +1005,24 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
   const scaledPercent = Math.round(effectiveScale * 100);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start pt-3 pb-28 px-2 sm:px-6 select-none overflow-x-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-start pt-3 pb-8 px-2 sm:px-6 select-none overflow-x-hidden">
       {/* Top Floating Device Studio Control Bar */}
       <div className="w-full max-w-[1440px] mb-3 z-30 flex flex-wrap items-center justify-between gap-3 px-4 py-2.5 rounded-3xl glass-floating">
         <div className="flex items-center gap-3">
           <div
+            data-active="true"
             className="liquid-dock-icon w-9 h-9 flex items-center justify-center shrink-0"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(0, 122, 255, 0.85) 0%, rgba(56, 189, 248, 0.75) 100%)',
-            }}
+            style={
+              {
+                '--dock-tint': 'rgba(56, 189, 248, 0.3)',
+                '--dock-glow': 'rgba(56, 189, 248, 0.4)',
+              } as React.CSSProperties
+            }
           >
-            <div className="liquid-dock-emblem w-6 h-6">
-              <FaIcon icon={activeSpec.icon} className="text-white text-xs" />
-            </div>
+            <FaIcon
+              icon={activeSpec.icon}
+              className="text-sky-400 text-xs relative z-10"
+            />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -149,13 +1035,24 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
               <Badge variant="secondary">{scaledPercent}% Scale</Badge>
             </div>
             <p className="text-[11px] font-mono-tabular text-[var(--text-muted)]">
-              {activeSpec.chip} · Independent Hardware Viewport
+              {activeSpec.chip}
             </p>
           </div>
         </div>
 
-        {/* Device Switcher Pills + Orientation & Scale Mode */}
+        {/* Device Switcher Pills + Home Screen Toggle + Orientation & Scale Mode */}
         <div className="flex flex-wrap items-center gap-2">
+          {onToggleHomeScreen && (
+            <Button
+              size="sm"
+              variant={isHomeScreenOpen ? 'default' : 'secondary'}
+              leftFaIcon="fa-solid fa-table-cells-large"
+              onClick={onToggleHomeScreen}
+            >
+              <span>{isHomeScreenOpen ? 'Home Screen (Active)' : 'Home Screen'}</span>
+            </Button>
+          )}
+
           <div className="liquid-pill-group">
             {(
               [
@@ -229,7 +1126,11 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
             }
             onClick={() => setScaleMode((m) => (m === 'fit' ? 'native' : 'fit'))}
           >
-            <span>{scaleMode === 'fit' ? '100% Native px' : `Auto Fit (${Math.round(autoFitScale * 100)}%)`}</span>
+            <span>
+              {scaleMode === 'fit'
+                ? '100% Native px'
+                : `Auto Fit (${Math.round(autoFitScale * 100)}%)`}
+            </span>
           </Button>
         </div>
       </div>
@@ -287,18 +1188,35 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     backgroundColor: mode === 'dark' ? '#080b12' : '#f2f4f8',
                   }}
                 >
-                  {/* macOS Sequoia Internal Status Menu Bar */}
+                  {/* macOS Tahoe Internal Status Menu Bar */}
                   <div className="h-7 px-4 bg-black/35 backdrop-blur-xl text-white/90 text-[11px] font-medium flex items-center justify-between shrink-0 z-30 border-b border-white/10">
                     <div className="flex items-center gap-4">
-                      <span className="font-bold flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={onToggleHomeScreen}
+                        className="font-bold flex items-center gap-1.5 hover:text-sky-400 transition-colors cursor-pointer"
+                      >
                         <FaIcon icon="fa-brands fa-apple" className="text-xs" />
                         <span>{t.app.brand}</span>
-                      </span>
+                      </button>
+                      {onToggleHomeScreen && (
+                        <button
+                          type="button"
+                          onClick={onToggleHomeScreen}
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition-all cursor-pointer ${
+                            isHomeScreenOpen
+                              ? 'bg-sky-500/30 text-sky-300 border border-sky-400/40'
+                              : 'hover:bg-white/10 opacity-85'
+                          }`}
+                        >
+                          <FaIcon icon="fa-solid fa-table-cells-large" className="mr-1" />
+                          Launchpad
+                        </button>
+                      )}
                       <span className="opacity-80">File</span>
                       <span className="opacity-80">Edit</span>
                       <span className="opacity-80">View</span>
                       <span className="opacity-80">Window</span>
-                      <span className="opacity-80">Help</span>
                     </div>
                     <div className="flex items-center gap-3 font-mono-tabular text-[10px]">
                       <span className="text-emerald-400">● 1440 × 900 px · M4 Max</span>
@@ -307,17 +1225,20 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                         <span>100%</span>
                         <FaIcon icon="fa-solid fa-battery-full" className="text-emerald-400" />
                       </span>
-                      <span>Oct 18 16:20</span>
+                      <span>Oct 18 17:30</span>
                     </div>
                   </div>
 
                   {/* Live Scrollable Website Viewport Locked to 1440 × 900 Desktop Layout */}
                   <div
-                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text ${activeSpec.viewportClass}`}
+                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text flex flex-col ${activeSpec.viewportClass}`}
                     style={{ transform: 'translateZ(0)' }}
                   >
                     {children}
                   </div>
+
+                  {/* Internal macOS Dock Pinned at Bottom Inside MacBook Screen */}
+                  {bottomDock}
                 </div>
 
                 {/* Bottom Chin Bezel with MacBook Pro Metallic Wordmark */}
@@ -351,6 +1272,7 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
 
           {/* =================================================================
            * CASE 2: IPAD PRO 13" M4 MOCKUP (FIXED 1180 × 820 / 820 × 1180 PX)
+           *         With 13-Icon Dock Inside Bottom of iPad Screen
            * =============================================================== */}
           {deviceMode === 'ipad' && (
             <div className="relative shrink-0">
@@ -390,9 +1312,21 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                       <span>9:41 AM</span>
                       <span className="opacity-60">Sun Oct 18</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-7 h-1 rounded-full bg-[var(--text-muted)]/40" />
-                    </div>
+                    {onToggleHomeScreen ? (
+                      <button
+                        type="button"
+                        onClick={onToggleHomeScreen}
+                        title="Toggle iPadOS Home Screen"
+                        className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-white/20 text-[10px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <FaIcon icon="fa-solid fa-table-cells-large" className="text-sky-400" />
+                        <span>{isHomeScreenOpen ? 'iPadOS Home' : 'All Apps'}</span>
+                      </button>
+                    ) : (
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-7 h-1 rounded-full bg-[var(--text-muted)]/40" />
+                      </div>
+                    )}
                     <div className="flex items-center gap-2 font-mono-tabular text-[11px]">
                       <span className="text-[var(--accent-primary)]">
                         {activeSpec.screenW}×{activeSpec.screenH}
@@ -404,18 +1338,26 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     </div>
                   </div>
 
-                  {/* Live Scrollable Website Viewport Locked to iPad Resolution */}
+                  {/* Live Scrollable Website / Home Screen Viewport Locked to iPad Resolution */}
                   <div
-                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text ${activeSpec.viewportClass}`}
+                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text flex flex-col ${activeSpec.viewportClass}`}
                     style={{ transform: 'translateZ(0)' }}
                   >
                     {children}
                   </div>
 
-                  {/* Bottom iPadOS Home Indicator Bar */}
-                  <div className="h-5 flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs">
-                    <div className="w-36 h-1.5 rounded-full bg-[var(--text-primary)]/40" />
-                  </div>
+                  {/* 13-Icon iPadOS Dock Pinned Inside Bottom of iPad Screen */}
+                  {bottomDock}
+
+                  {/* Interactive Bottom iPadOS Home Indicator Bar (Click to return to Home Screen) */}
+                  <button
+                    type="button"
+                    onClick={onToggleHomeScreen}
+                    title="Click Home Bar to switch between App and iPad Home Screen"
+                    className="h-5 w-full flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs cursor-pointer group"
+                  >
+                    <div className="w-36 h-1.5 rounded-full bg-[var(--text-primary)]/45 group-hover:bg-[var(--accent-primary)] transition-colors" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -423,10 +1365,11 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
 
           {/* =================================================================
            * CASE 3: IPHONE 16 PRO MAX MOCKUP (FIXED 430 × 932 / 932 × 430 PX)
+           *         With 4-Icon Dock Inside Bottom of iPhone Screen
            * =============================================================== */}
           {deviceMode === 'iphone' && (
             <div className="relative shrink-0">
-              {/* Physical Titanium Side Buttons (Action Button, Volume Up/Down, Power) */}
+              {/* Physical Titanium Side Buttons */}
               {orientation === 'portrait' && (
                 <>
                   <div
@@ -468,11 +1411,21 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     backgroundColor: mode === 'dark' ? '#080b12' : '#f2f4f8',
                   }}
                 >
-                  {/* iOS 18 Status Bar + Interactive Dynamic Island */}
+                  {/* iOS Status Bar + Interactive Dynamic Island */}
                   <div className="pt-2.5 pb-1.5 px-6 flex items-center justify-between shrink-0 z-30 relative">
-                    <span className="text-xs font-bold font-mono-tabular text-[var(--text-primary)]">
-                      9:41
-                    </span>
+                    <button
+                      type="button"
+                      onClick={onToggleHomeScreen}
+                      title="Return to iPhone Home Screen"
+                      className="text-xs font-bold font-mono-tabular text-[var(--text-primary)] hover:text-[var(--accent-primary)] flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>9:41</span>
+                      {!isHomeScreenOpen && onToggleHomeScreen && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-[var(--accent-soft)] text-[var(--accent-primary)] text-[9px] font-sans">
+                          Home
+                        </span>
+                      )}
+                    </button>
 
                     {/* Interactive Dynamic Island */}
                     <button
@@ -514,486 +1467,30 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                     </div>
                   </div>
 
-                  {/* Live Scrollable Mobile Website Viewport Locked to iPhone Resolution */}
+                  {/* Live Scrollable Mobile Website / SpringBoard Home Screen Viewport */}
                   <div
-                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text ${activeSpec.viewportClass}`}
+                    className={`flex-1 overflow-y-auto overflow-x-hidden relative select-text flex flex-col ${activeSpec.viewportClass}`}
                     style={{ transform: 'translateZ(0)' }}
                   >
                     {children}
                   </div>
 
-                  {/* Bottom iOS Home Bar Pill */}
-                  <div className="h-6 flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs">
-                    <div className="w-32 h-1.5 rounded-full bg-[var(--text-primary)]/50" />
-                  </div>
+                  {/* 4-Icon iOS Dock Pinned Inside Bottom of iPhone Screen */}
+                  {bottomDock}
+
+                  {/* Interactive Bottom iOS Home Bar Pill (Click to return to iPhone Home Screen) */}
+                  <button
+                    type="button"
+                    onClick={onToggleHomeScreen}
+                    title="Click Home Bar to return to iPhone Home Screen"
+                    className="h-5 w-full flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs cursor-pointer group"
+                  >
+                    <div className="w-32 h-1.5 rounded-full bg-[var(--text-primary)]/50 group-hover:bg-[var(--accent-primary)] transition-colors" />
+                  </button>
                 </div>
               </div>
             </div>
           )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ============================================================================
- * 2. macOS Tahoe / iOS 26 Floating 3D Liquid Glass Dock (<MacOSLiquidDock />)
- *    Featuring Multi-Layered 3D Refractive Squircle App Icons
- * ========================================================================== */
-interface MacOSLiquidDockProps {
-  activeSection: NavSectionId;
-  onSelectSection: (section: NavSectionId) => void;
-  deviceMode: DeviceMode;
-  onSelectDeviceMode: (mode: DeviceMode) => void;
-  onOpenCommandPalette: () => void;
-  onOpenQuickCreate: () => void;
-  ordersCount: number;
-  isAuthenticated?: boolean;
-  onToggleLock?: () => void;
-}
-
-export const MacOSLiquidDock: React.FC<MacOSLiquidDockProps> = ({
-  activeSection,
-  onSelectSection,
-  deviceMode,
-  onSelectDeviceMode,
-  onOpenCommandPalette,
-  onOpenQuickCreate,
-  ordersCount,
-  isAuthenticated = true,
-  onToggleLock,
-}) => {
-  const { mode, toggleMode } = useTheme();
-  const { t } = useLanguage();
-  const { addToast } = useToast();
-  const [dockMinimized, setDockMinimized] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
-  const [bouncingKey, setBouncingKey] = useState<string | null>(null);
-
-  const triggerBounce = (key: string) => {
-    setBouncingKey(key);
-    setTimeout(() => setBouncingKey(null), 450);
-  };
-
-  if (dockMinimized) {
-    return (
-      <div className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50">
-        <Button
-          variant="glass-pill"
-          size="sm"
-          onClick={() => setDockMinimized(false)}
-          leftFaIcon="fa-solid fa-angles-up"
-        >
-          <span>macOS Dock ({deviceMode.toUpperCase()})</span>
-        </Button>
-      </div>
-    );
-  }
-
-  // 1. Core Application Module iOS 26 Clear/Tinted Liquid Glass Squircle Icons
-  const appDockItems: {
-    id: NavSectionId;
-    label: string;
-    faIcon: string;
-    accentSubIcon?: string;
-    dockTint: string;
-    dockGlow: string;
-    glyphColor: string;
-    badge?: number;
-  }[] = [
-    {
-      id: 'overview',
-      label: t.nav.overview,
-      faIcon: 'fa-solid fa-compass',
-      dockTint: 'rgba(56, 189, 248, 0.28)',
-      dockGlow: 'rgba(56, 189, 248, 0.38)',
-      glyphColor: '#38bdf8',
-    },
-    {
-      id: 'analytics',
-      label: t.nav.analytics,
-      faIcon: 'fa-solid fa-chart-pie',
-      dockTint: 'rgba(192, 132, 252, 0.28)',
-      dockGlow: 'rgba(192, 132, 252, 0.38)',
-      glyphColor: '#c084fc',
-    },
-    {
-      id: 'orders',
-      label: t.nav.orders,
-      faIcon: 'fa-solid fa-bag-shopping',
-      dockTint: 'rgba(52, 211, 153, 0.28)',
-      dockGlow: 'rgba(52, 211, 153, 0.38)',
-      glyphColor: '#34d399',
-      badge: ordersCount,
-    },
-    {
-      id: 'products',
-      label: t.nav.products,
-      faIcon: 'fa-solid fa-cubes-stacked',
-      dockTint: 'rgba(251, 191, 36, 0.28)',
-      dockGlow: 'rgba(251, 191, 36, 0.38)',
-      glyphColor: '#fbbf24',
-    },
-    {
-      id: 'customers',
-      label: t.nav.customers,
-      faIcon: 'fa-solid fa-user-astronaut',
-      dockTint: 'rgba(251, 113, 133, 0.28)',
-      dockGlow: 'rgba(251, 113, 133, 0.38)',
-      glyphColor: '#fb7185',
-    },
-    {
-      id: 'development',
-      label: 'shadcn UI Kit',
-      faIcon: 'fa-solid fa-wand-magic-sparkles',
-      dockTint: 'rgba(129, 140, 248, 0.3)',
-      dockGlow: 'rgba(129, 140, 248, 0.4)',
-      glyphColor: '#818cf8',
-    },
-    {
-      id: 'settings',
-      label: t.nav.settings,
-      faIcon: 'fa-solid fa-sliders',
-      dockTint: 'rgba(148, 163, 184, 0.26)',
-      dockGlow: 'rgba(148, 163, 184, 0.34)',
-      glyphColor: '#94a3b8',
-    },
-  ];
-
-  // 2. Hardware Device Resolution Switcher iOS 26 Clear/Tinted Liquid Glass Icons
-  const deviceDockItems: {
-    id: DeviceMode;
-    label: string;
-    resolution: string;
-    faIcon: string;
-    dockTint: string;
-    dockGlow: string;
-    glyphColor: string;
-  }[] = [
-    {
-      id: 'full',
-      label: 'Full Desktop',
-      resolution: 'Responsive Canvas',
-      faIcon: 'fa-solid fa-display',
-      dockTint: 'rgba(56, 189, 248, 0.26)',
-      dockGlow: 'rgba(56, 189, 248, 0.36)',
-      glyphColor: '#38bdf8',
-    },
-    {
-      id: 'macbook',
-      label: 'MacBook Pro 16"',
-      resolution: '1440 × 900 px',
-      faIcon: 'fa-solid fa-laptop',
-      dockTint: 'rgba(96, 165, 250, 0.28)',
-      dockGlow: 'rgba(96, 165, 250, 0.38)',
-      glyphColor: '#60a5fa',
-    },
-    {
-      id: 'ipad',
-      label: 'iPad Pro 13"',
-      resolution: '1180 × 820 px',
-      faIcon: 'fa-solid fa-tablet-screen-button',
-      dockTint: 'rgba(167, 139, 250, 0.28)',
-      dockGlow: 'rgba(167, 139, 250, 0.38)',
-      glyphColor: '#a78bfa',
-    },
-    {
-      id: 'iphone',
-      label: 'iPhone 16 Pro Max',
-      resolution: '430 × 932 px',
-      faIcon: 'fa-solid fa-mobile-screen-button',
-      dockTint: 'rgba(244, 114, 182, 0.28)',
-      dockGlow: 'rgba(244, 114, 182, 0.38)',
-      glyphColor: '#f472b6',
-    },
-  ];
-
-  const getScaleClass = (idx: number) => {
-    if (hoveredIndex === null) return 'scale-100 translate-y-0';
-    const dist = Math.abs(hoveredIndex - idx);
-    if (dist === 0) return 'scale-[1.22] -translate-y-2.5';
-    if (dist === 1) return 'scale-[1.09] -translate-y-1';
-    return 'scale-100 translate-y-0';
-  };
-
-  return (
-    <div
-      aria-label="macOS Liquid Glass Dock"
-      className="fixed bottom-3 left-1/2 -translate-x-1/2 z-50 max-w-[96vw] select-none"
-    >
-      <div
-        className="px-3.5 py-2 rounded-[26px] flex items-end gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar"
-        style={{
-          background:
-            mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(15, 23, 42, 0.38) 100%)'
-              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.52) 0%, rgba(255, 255, 255, 0.28) 100%)',
-          backdropFilter: 'blur(40px) saturate(210%)',
-          WebkitBackdropFilter: 'blur(40px) saturate(210%)',
-          boxShadow:
-            mode === 'dark'
-              ? 'inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 24px 48px -12px rgba(0, 0, 0, 0.72)'
-              : 'inset 0 1px 0 0 rgba(255, 255, 255, 0.85), 0 20px 44px -12px rgba(15, 23, 42, 0.16)',
-          border:
-            mode === 'dark'
-              ? '1px solid rgba(255, 255, 255, 0.14)'
-              : '1px solid rgba(255, 255, 255, 0.68)',
-        }}
-      >
-        {/* 1. Core Application Module iOS 26 Liquid Glass Squircle Icons */}
-        {appDockItems.map((item, idx) => {
-          const isActive = isAuthenticated && activeSection === item.id;
-          const key = `app-${item.id}`;
-          const isHovered = hoveredKey === key;
-          const isBouncing = bouncingKey === key;
-          return (
-            <div key={item.id} className="relative flex flex-col items-center">
-              {isHovered && (
-                <div className="hidden sm:block absolute -top-11 px-3 py-1 rounded-full glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
-                  {item.label}
-                </div>
-              )}
-
-              <button
-                type="button"
-                data-active={isActive}
-                onClick={() => {
-                  triggerBounce(key);
-                  onSelectSection(item.id);
-                }}
-                onMouseEnter={() => {
-                  setHoveredIndex(idx);
-                  setHoveredKey(key);
-                }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                  setHoveredKey(null);
-                }}
-                aria-label={item.label}
-                style={
-                  {
-                    '--dock-tint': item.dockTint,
-                    '--dock-glow': item.dockGlow,
-                  } as React.CSSProperties
-                }
-                className={`liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
-                  idx
-                )} ${isBouncing ? 'animate-bounce' : ''}`}
-              >
-                {/* Inner Optical Specular Plate + Luminous Glyph */}
-                <span
-                  aria-hidden="true"
-                  className="w-6 h-6 rounded-lg flex items-center justify-center relative z-10"
-                  style={{
-                    color: item.glyphColor,
-                    filter: `drop-shadow(0 2px 6px ${item.dockGlow})`,
-                  }}
-                >
-                  <FaIcon icon={item.faIcon} className="text-[17px] sm:text-[18px]" />
-                </span>
-
-                {typeof item.badge === 'number' && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 z-20 min-w-[17px] h-[17px] px-1 rounded-full bg-rose-500/90 backdrop-blur-md text-white text-[9px] font-mono-tabular font-bold flex items-center justify-center border border-white/60 shadow-xs">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-
-              <span
-                className={`mt-1.5 w-1 h-1 rounded-full transition-all ${
-                  isActive
-                    ? 'bg-[var(--text-primary)] scale-100 opacity-90'
-                    : 'scale-0 opacity-0'
-                }`}
-              />
-            </div>
-          );
-        })}
-
-        {/* Hairline Glass Dock Divider */}
-        <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-1 mb-2.5 shrink-0" />
-
-        {/* 2. Device Mockup Resolution Switcher iOS 26 Liquid Glass Squircle Icons */}
-        {deviceDockItems.map((dev, devIdx) => {
-          const globalIdx = appDockItems.length + devIdx;
-          const isActive = deviceMode === dev.id;
-          const key = `dev-${dev.id}`;
-          const isHovered = hoveredKey === key;
-          const isBouncing = bouncingKey === key;
-          return (
-            <div key={dev.id} className="relative flex flex-col items-center">
-              {isHovered && (
-                <div className="hidden sm:flex flex-col items-center absolute -top-13 px-3 py-1 rounded-2xl glass-floating text-[11px] font-semibold text-[var(--text-primary)] whitespace-nowrap pointer-events-none animate-in fade-in duration-100 z-50">
-                  <span>{dev.label}</span>
-                  <span className="text-[9px] font-mono-tabular text-[var(--accent-primary)]">
-                    {dev.resolution}
-                  </span>
-                </div>
-              )}
-
-              <button
-                type="button"
-                data-active={isActive}
-                onClick={() => {
-                  triggerBounce(key);
-                  onSelectDeviceMode(dev.id);
-                  addToast(
-                    `${dev.label} (${dev.resolution})`,
-                    dev.id === 'full'
-                      ? 'Restored responsive desktop canvas.'
-                      : `Locked website resolution to ${dev.resolution}.`,
-                    'info'
-                  );
-                }}
-                onMouseEnter={() => {
-                  setHoveredIndex(globalIdx);
-                  setHoveredKey(key);
-                }}
-                onMouseLeave={() => {
-                  setHoveredIndex(null);
-                  setHoveredKey(null);
-                }}
-                aria-label={`${dev.label} (${dev.resolution})`}
-                style={
-                  {
-                    '--dock-tint': dev.dockTint,
-                    '--dock-glow': dev.dockGlow,
-                  } as React.CSSProperties
-                }
-                className={`liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer shrink-0 ${getScaleClass(
-                  globalIdx
-                )} ${isBouncing ? 'animate-bounce' : ''}`}
-              >
-                <span
-                  aria-hidden="true"
-                  className="w-6 h-6 rounded-lg flex items-center justify-center relative z-10"
-                  style={{
-                    color: isActive ? dev.glyphColor : 'var(--text-primary)',
-                    filter: isActive ? `drop-shadow(0 2px 6px ${dev.dockGlow})` : 'none',
-                  }}
-                >
-                  <FaIcon icon={dev.faIcon} className="text-[16px] sm:text-[17px]" />
-                </span>
-              </button>
-
-              <span
-                className={`mt-1.5 h-1 rounded-full transition-all ${
-                  isActive
-                    ? 'w-2.5 bg-[var(--accent-primary)] opacity-100'
-                    : 'w-1 opacity-0'
-                }`}
-              />
-            </div>
-          );
-        })}
-
-        {/* Hairline Glass Dock Divider */}
-        <div className="h-8 w-px bg-[var(--glass-border-strong)] mx-1 mb-2.5 shrink-0 hidden sm:block" />
-
-        {/* 3. System Utility iOS 26 Clear Liquid Glass Squircle Icons */}
-        <div className="hidden sm:flex items-end gap-2">
-          {isAuthenticated && (
-            <>
-              <div className="relative flex flex-col items-center">
-                <button
-                  type="button"
-                  onClick={onOpenCommandPalette}
-                  title="Spotlight Search (⌘K)"
-                  style={
-                    {
-                      '--dock-tint': 'rgba(56, 189, 248, 0.22)',
-                      '--dock-glow': 'rgba(56, 189, 248, 0.32)',
-                    } as React.CSSProperties
-                  }
-                  className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
-                >
-                  <FaIcon
-                    icon="fa-solid fa-magnifying-glass"
-                    className="text-[15px] text-sky-400 relative z-10"
-                  />
-                </button>
-                <span className="mt-1.5 w-1 h-1 opacity-0" />
-              </div>
-
-              <div className="relative flex flex-col items-center">
-                <button
-                  type="button"
-                  onClick={onOpenQuickCreate}
-                  title={t.app.quickCreate}
-                  style={
-                    {
-                      '--dock-tint': 'rgba(52, 211, 153, 0.22)',
-                      '--dock-glow': 'rgba(52, 211, 153, 0.32)',
-                    } as React.CSSProperties
-                  }
-                  className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
-                >
-                  <FaIcon
-                    icon="fa-solid fa-plus"
-                    className="text-[15px] text-emerald-400 relative z-10"
-                  />
-                </button>
-                <span className="mt-1.5 w-1 h-1 opacity-0" />
-              </div>
-            </>
-          )}
-
-          {onToggleLock && (
-            <div className="relative flex flex-col items-center">
-              <button
-                type="button"
-                onClick={onToggleLock}
-                title={isAuthenticated ? 'Lock Screen (Login View)' : 'Unlock to Dashboard'}
-                style={
-                  {
-                    '--dock-tint': 'rgba(251, 113, 133, 0.24)',
-                    '--dock-glow': 'rgba(251, 113, 133, 0.34)',
-                  } as React.CSSProperties
-                }
-                className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
-              >
-                <FaIcon
-                  icon={isAuthenticated ? 'fa-solid fa-lock' : 'fa-solid fa-lock-open'}
-                  className="text-[15px] text-rose-400 relative z-10"
-                />
-              </button>
-              <span className="mt-1.5 w-1 h-1 opacity-0" />
-            </div>
-          )}
-
-          <div className="relative flex flex-col items-center">
-            <button
-              type="button"
-              onClick={toggleMode}
-              title={mode === 'dark' ? t.app.themeLight : t.app.themeDark}
-              style={
-                {
-                  '--dock-tint': 'rgba(251, 191, 36, 0.24)',
-                  '--dock-glow': 'rgba(251, 191, 36, 0.34)',
-                } as React.CSSProperties
-              }
-              className="liquid-dock-icon w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center transition-all duration-200 hover:-translate-y-2 hover:scale-112 active:scale-95 cursor-pointer"
-            >
-              <FaIcon
-                icon={mode === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}
-                className="text-[15px] text-amber-400 relative z-10"
-              />
-            </button>
-            <span className="mt-1.5 w-1 h-1 opacity-0" />
-          </div>
-
-          <div className="relative flex flex-col items-center">
-            <button
-              type="button"
-              onClick={() => setDockMinimized(true)}
-              title="Minimize Dock"
-              className="liquid-dock-icon w-9 h-11 sm:h-12 text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center justify-center transition-all cursor-pointer"
-            >
-              <FaIcon icon="fa-solid fa-angles-down" className="text-xs relative z-10" />
-            </button>
-            <span className="mt-1.5 w-1 h-1 opacity-0" />
-          </div>
         </div>
       </div>
     </div>

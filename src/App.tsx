@@ -11,7 +11,11 @@ import { OrdersTable } from './components/OrdersTable';
 import { OverviewWidgets } from './components/OverviewWidgets';
 import { AuthenticatedUser, LoginScreen } from './components/LoginScreen';
 import { DevelopmentShowcaseView } from './components/DevelopmentShowcaseView';
-import { DeviceMockupFrame, MacOSLiquidDock } from './components/DeviceMockupStudio';
+import {
+  DeviceHomeScreen,
+  DeviceInternalDock,
+  DeviceMockupFrame,
+} from './components/DeviceMockupStudio';
 import { Button, Card, CardContent, FaIcon } from './components/ui/liquid-shadcn';
 import {
   AnalyticsModuleView,
@@ -76,13 +80,19 @@ const DashboardWorkspace: React.FC = () => {
   // Device Mockup Studio State ('full' | 'macbook' | 'ipad' | 'iphone')
   const [deviceMode, setDeviceMode] = useState<DeviceMode>('full');
   const [deviceOrientation, setDeviceOrientation] = useState<DeviceOrientation>('portrait');
+  // OS Home Screen (SpringBoard / Launchpad) displaying Sidebar items as App Icons
+  const [isHomeScreenOpen, setIsHomeScreenOpen] = useState<boolean>(false);
 
   const handleSelectDeviceMode = (nextMode: DeviceMode) => {
     setDeviceMode(nextMode);
     if (nextMode === 'iphone') {
       setDeviceOrientation('portrait');
+      setIsHomeScreenOpen(true);
     } else if (nextMode === 'ipad') {
       setDeviceOrientation('landscape');
+      setIsHomeScreenOpen(true);
+    } else if (nextMode === 'macbook') {
+      setIsHomeScreenOpen(true);
     }
   };
 
@@ -374,17 +384,81 @@ const DashboardWorkspace: React.FC = () => {
         onToggleOrientation={() =>
           setDeviceOrientation((o) => (o === 'portrait' ? 'landscape' : 'portrait'))
         }
+        isHomeScreenOpen={isHomeScreenOpen}
+        onToggleHomeScreen={
+          isAuthenticated ? () => setIsHomeScreenOpen((prev) => !prev) : undefined
+        }
+        bottomDock={
+          <DeviceInternalDock
+            deviceMode={deviceMode}
+            activeSection={activeSection}
+            isHomeScreenOpen={isHomeScreenOpen}
+            onSelectSection={(sec) => {
+              if (!isAuthenticated) {
+                setIsAuthenticated(true);
+              }
+              setActiveSection(sec);
+              setIsHomeScreenOpen(false);
+            }}
+            onToggleHomeScreen={() => setIsHomeScreenOpen((prev) => !prev)}
+            onSelectDeviceMode={handleSelectDeviceMode}
+            onOpenCommandPalette={() => setCommandOpen(true)}
+            onOpenQuickCreate={() => {
+              setQuickCreateTab('order');
+              setQuickCreateOpen(true);
+            }}
+            ordersCount={activeOrdersCount}
+            lowStockCount={lowStockCount}
+            isAuthenticated={isAuthenticated}
+            onToggleLock={() => {
+              setIsAuthenticated((prev) => {
+                const next = !prev;
+                addToast(
+                  next ? `Welcome back, ${currentUser.name}` : t.app.signOut,
+                  next ? 'Workspace unlocked.' : 'Switched to Lock / Login Screen.',
+                  'info'
+                );
+                return next;
+              });
+            }}
+          />
+        }
       >
         {!isAuthenticated ? (
           <LoginScreen
             onSuccessLogin={(user) => {
               setCurrentUser(user);
               setIsAuthenticated(true);
+              if (deviceMode !== 'full') {
+                setIsHomeScreenOpen(true);
+              }
               addToast(
                 `Welcome back, ${user.name}`,
                 `Signed in as ${user.role} · ${activeWorkspace.name}`
               );
             }}
+          />
+        ) : isHomeScreenOpen ? (
+          /* Device OS Home Screen (SpringBoard / iPadOS Home / macOS Launchpad)
+           * Every Sidebar item is rendered as an interactive Liquid Glass App Icon */
+          <DeviceHomeScreen
+            deviceMode={deviceMode}
+            activeSection={activeSection}
+            onOpenApp={(sec) => {
+              setActiveSection(sec);
+              setIsHomeScreenOpen(false);
+            }}
+            onOpenCommandPalette={() => setCommandOpen(true)}
+            onOpenQuickCreate={() => {
+              setQuickCreateTab('order');
+              setQuickCreateOpen(true);
+            }}
+            ordersCount={activeOrdersCount}
+            lowStockCount={lowStockCount}
+            totalRevenueFormatted={`$${kpiMetrics.totalRevenue.toLocaleString()}`}
+            conversionRate={kpiMetrics.conversionRate}
+            userName={currentUser.name}
+            workspaceName={activeWorkspace.name}
           />
         ) : (
           <div className="flex-1 flex flex-col">
@@ -410,7 +484,10 @@ const DashboardWorkspace: React.FC = () => {
                   prev.map((a) => (a.id === id ? { ...a, read: true } : a))
                 )
               }
-              onNavigate={(sec) => setActiveSection(sec)}
+              onNavigate={(sec) => {
+                setActiveSection(sec);
+                setIsHomeScreenOpen(false);
+              }}
               currentUser={currentUser}
               onLogout={() => {
                 setIsAuthenticated(false);
@@ -424,7 +501,10 @@ const DashboardWorkspace: React.FC = () => {
             <div className="flex-1 flex gap-5 px-3 sm:px-6 pb-10 pt-2 max-w-[1600px] w-full mx-auto">
               <Sidebar
                 activeSection={activeSection}
-                onSelectSection={(sec) => setActiveSection(sec)}
+                onSelectSection={(sec) => {
+                  setActiveSection(sec);
+                  setIsHomeScreenOpen(false);
+                }}
                 collapsed={sidebarCollapsed}
                 onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
                 mobileOpen={mobileSidebarOpen}
@@ -439,7 +519,17 @@ const DashboardWorkspace: React.FC = () => {
                   <CardContent>
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                       <div className="space-y-1.5 max-w-2xl">
-                        <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--text-muted)]">
+                          <button
+                            type="button"
+                            onClick={() => setIsHomeScreenOpen(true)}
+                            className="liquid-btn px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-[var(--accent-primary)] inline-flex items-center gap-1.5 cursor-pointer"
+                            title="Open Device OS Home Screen (App Icons)"
+                          >
+                            <FaIcon icon="fa-solid fa-table-cells-large" className="text-[10px]" />
+                            <span>Home Apps</span>
+                          </button>
+                          <span aria-hidden="true">/</span>
                           <span>{activeWorkspace.name}</span>
                           <span aria-hidden="true">/</span>
                           <span className="font-medium text-[var(--accent-primary)]">
@@ -687,42 +777,14 @@ const DashboardWorkspace: React.FC = () => {
         )}
       </DeviceMockupFrame>
 
-      {/* Floating macOS 3D Liquid Glass Dock */}
-      <MacOSLiquidDock
-        activeSection={activeSection}
-        onSelectSection={(sec) => {
-          if (!isAuthenticated) {
-            setIsAuthenticated(true);
-          }
-          setActiveSection(sec);
-        }}
-        deviceMode={deviceMode}
-        onSelectDeviceMode={handleSelectDeviceMode}
-        onOpenCommandPalette={() => setCommandOpen(true)}
-        onOpenQuickCreate={() => {
-          setQuickCreateTab('order');
-          setQuickCreateOpen(true);
-        }}
-        ordersCount={activeOrdersCount}
-        isAuthenticated={isAuthenticated}
-        onToggleLock={() => {
-          setIsAuthenticated((prev) => {
-            const next = !prev;
-            addToast(
-              next ? `Welcome back, ${currentUser.name}` : t.app.signOut,
-              next ? 'Workspace unlocked.' : 'Switched to macOS Lock / Login Screen.',
-              'info'
-            );
-            return next;
-          });
-        }}
-      />
-
       {/* Floating Glass Overlays & Modals */}
       <SearchCommandModal
         open={commandOpen}
         onClose={() => setCommandOpen(false)}
-        onNavigate={(sec) => setActiveSection(sec)}
+        onNavigate={(sec) => {
+          setActiveSection(sec);
+          setIsHomeScreenOpen(false);
+        }}
         onOpenQuickCreate={(tab) => {
           setQuickCreateTab(tab);
           setQuickCreateOpen(true);
