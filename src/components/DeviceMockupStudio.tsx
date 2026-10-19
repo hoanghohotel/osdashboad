@@ -1352,15 +1352,6 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                   {/* 13-Icon iPadOS Dock Pinned Inside Bottom of iPad Screen */}
                   {bottomDock}
 
-                  {/* Interactive Bottom iPadOS Home Indicator Bar (Click to return to Home Screen) */}
-                  <button
-                    type="button"
-                    onClick={onToggleHomeScreen}
-                    title="Click Home Bar to switch between App and iPad Home Screen"
-                    className="h-5 w-full flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs cursor-pointer group"
-                  >
-                    <div className="w-36 h-1.5 rounded-full bg-[var(--text-primary)]/45 group-hover:bg-[var(--accent-primary)] transition-colors" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -1482,15 +1473,6 @@ export const DeviceMockupFrame: React.FC<DeviceMockupFrameProps> = ({
                   {/* 4-Icon iOS Dock Pinned Inside Bottom of iPhone Screen */}
                   {bottomDock}
 
-                  {/* Interactive Bottom iOS Home Bar Pill (Click to return to iPhone Home Screen) */}
-                  <button
-                    type="button"
-                    onClick={onToggleHomeScreen}
-                    title="Click Home Bar to return to iPhone Home Screen"
-                    className="h-5 w-full flex items-center justify-center shrink-0 bg-black/10 backdrop-blur-xs cursor-pointer group"
-                  >
-                    <div className="w-32 h-1.5 rounded-full bg-[var(--text-primary)]/50 group-hover:bg-[var(--accent-primary)] transition-colors" />
-                  </button>
                 </div>
               </div>
             </div>
